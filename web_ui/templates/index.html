@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper2Agent - Transform Research Papers into AI Agents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .glass-card-dark {
+            background: rgba(31, 41, 55, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-card {
+            transition: all 0.3s ease;
+            transform: scale(0.98);
+        }
+
+        .step-card.active {
+            transform: scale(1);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .step-card.completed {
+            opacity: 0.8;
+        }
+
+        .progress-bar-fill {
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease;
+        }
+
+        .log-entry {
+            animation: slideIn 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        input, select {
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .status-pending {
+            background: rgba(156, 163, 175, 0.2);
+            color: #4B5563;
+        }
+
+        .status-running {
+            background: rgba(59, 130, 246, 0.2);
+            color: #2563EB;
+        }
+
+        .status-completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #16A34A;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #DC2626;
+        }
+
+        .spinner {
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="glass-card p-8 mb-8 slide-in">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-2">
+                        Paper2Agent
+                    </h1>
+                    <p class="text-gray-600 text-lg">
+                        Transform Research Papers into Interactive AI Agents
+                    </p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div id="status-indicator" class="status-badge status-pending">
+                        <div class="w-2 h-2 rounded-full bg-current"></div>
+                        <span>Ready</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Configuration -->
+            <div class="lg:col-span-1">
+                <div class="glass-card p-6 slide-in">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-cog text-purple-600"></i>
+                        Configuration
+                    </h2>
+
+                    <form id="pipeline-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-700">
+                                Project Directory <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="project_dir"
+                                name="project_dir"
+                                required
+                                placeholder="e.g., my_project"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-700">
+                                GitHub Repository URL <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="url"
+                                id="github_url"
+                                name="github_url"
+                                required
+                                placeholder="https://github.com/user/repo"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-700">
+                                Tutorial Filter (Optional)
+                            </label>
+                            <input
+                                type="text"
+                                id="tutorials"
+                                name="tutorials"
+                                placeholder="e.g., data visualization, ML tutorial"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+                            />
+                            <p class="text-xs text-gray-500 mt-1">
+                                Natural language description of tutorials to process
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-700">
+                                API Key (Optional)
+                            </label>
+                            <input
+                                type="password"
+                                id="api_key"
+                                name="api_key"
+                                placeholder="Your API key"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+                            />
+                            <p class="text-xs text-gray-500 mt-1">
+                                For notebook execution and testing
+                            </p>
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="start-btn"
+                            class="w-full btn-primary text-white font-bold py-4 px-6 rounded-lg shadow-lg flex items-center justify-center gap-2"
+                        >
+                            <i class="fas fa-rocket"></i>
+                            Start Pipeline
+                        </button>
+                    </form>
+
+                    <!-- Stats -->
+                    <div id="stats" class="mt-8 space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm font-medium text-gray-600">
+                                <i class="fas fa-clock mr-2"></i>Elapsed Time
+                            </span>
+                            <span id="elapsed-time" class="font-bold text-gray-800">0:00</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm font-medium text-gray-600">
+                                <i class="fas fa-hourglass-half mr-2"></i>ETA
+                            </span>
+                            <span id="eta-time" class="font-bold text-gray-800">--:--</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm font-medium text-gray-600">
+                                <i class="fas fa-tasks mr-2"></i>Progress
+                            </span>
+                            <span id="progress-text" class="font-bold text-gray-800">0/10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Progress & Logs -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Progress Bar -->
+                <div class="glass-card p-6 slide-in">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                        <i class="fas fa-chart-line text-purple-600"></i>
+                        Pipeline Progress
+                    </h2>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between">
+                            <div>
+                                <span id="progress-percent" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-purple-600 bg-purple-200">
+                                    0%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="overflow-hidden h-4 mb-4 text-xs flex rounded-full bg-gray-200">
+                            <div
+                                id="progress-bar"
+                                style="width: 0%"
+                                class="progress-bar-fill shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Steps -->
+                <div class="glass-card p-6 slide-in">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-list-check text-purple-600"></i>
+                        Pipeline Steps
+                    </h2>
+                    <div id="steps-container" class="space-y-3">
+                        <!-- Steps will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Logs -->
+                <div class="glass-card-dark p-6 slide-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fas fa-terminal text-purple-400"></i>
+                            Live Logs
+                        </h2>
+                        <button
+                            id="clear-logs-btn"
+                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition"
+                        >
+                            <i class="fas fa-trash mr-2"></i>Clear
+                        </button>
+                    </div>
+                    <div
+                        id="logs-container"
+                        class="bg-black rounded-lg p-4 h-96 overflow-y-auto font-mono text-sm text-green-400"
+                    >
+                        <div class="text-gray-500">Waiting for pipeline to start...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let isRunning = false;
+        let eventSource = null;
+
+        // Initialize steps
+        const steps = [
+            {id: 1, name: 'Setup project environment', icon: '🔧'},
+            {id: 2, name: 'Clone GitHub repository', icon: '📥'},
+            {id: 3, name: 'Prepare working directories', icon: '📁'},
+            {id: 4, name: 'Add context MCP server', icon: '🔌'},
+            {id: 5, name: 'Setup Python environment & scan tutorials', icon: '🐍'},
+            {id: 6, name: 'Execute tutorial notebooks', icon: '📓'},
+            {id: 7, name: 'Extract tools from tutorials', icon: '🔨'},
+            {id: 8, name: 'Wrap tools in MCP server', icon: '📦'},
+            {id: 9, name: 'Generate code coverage & quality reports', icon: '📊'},
+            {id: 10, name: 'Launch MCP server', icon: '🚀'}
+        ];
+
+        // Render initial steps
+        function renderSteps() {
+            const container = document.getElementById('steps-container');
+            container.innerHTML = steps.map(step => `
+                <div id="step-${step.id}" class="step-card glass-card p-4 flex items-center gap-4">
+                    <div class="text-3xl">${step.icon}</div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-800">${step.name}</div>
+                        <div class="text-xs text-gray-500 mt-1">Step ${step.id} of 10</div>
+                    </div>
+                    <div class="status-badge status-pending">
+                        <span>Pending</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update step status
+        function updateStep(stepId, status, timestamp) {
+            const stepEl = document.getElementById(`step-${stepId}`);
+            if (!stepEl) return;
+
+            // Remove old classes
+            stepEl.classList.remove('active', 'completed');
+
+            // Get status badge
+            const badge = stepEl.querySelector('.status-badge');
+            badge.className = 'status-badge';
+
+            let iconHtml = '';
+            let statusText = '';
+
+            switch (status) {
+                case 'start':
+                    stepEl.classList.add('active');
+                    badge.classList.add('status-running');
+                    iconHtml = '<div class="spinner"></div>';
+                    statusText = 'Running';
+                    break;
+                case 'complete':
+                    stepEl.classList.add('completed');
+                    badge.classList.add('status-completed');
+                    iconHtml = '<i class="fas fa-check-circle"></i>';
+                    statusText = 'Completed';
+                    break;
+                case 'skip':
+                    stepEl.classList.add('completed');
+                    badge.classList.add('status-completed');
+                    iconHtml = '<i class="fas fa-forward"></i>';
+                    statusText = 'Skipped';
+                    break;
+                case 'error':
+                    badge.classList.add('status-error');
+                    iconHtml = '<i class="fas fa-exclamation-circle"></i>';
+                    statusText = 'Error';
+                    break;
+                default:
+                    badge.classList.add('status-pending');
+                    iconHtml = '<div class="w-2 h-2 rounded-full bg-current"></div>';
+                    statusText = 'Pending';
+            }
+
+            badge.innerHTML = `${iconHtml}<span>${statusText}</span>`;
+        }
+
+        // Update progress bar
+        function updateProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-percent').textContent = `${percent}%`;
+            document.getElementById('progress-text').textContent = `${current}/${total}`;
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Add log entry
+        function addLog(message) {
+            const container = document.getElementById('logs-container');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry mb-1';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Clear logs
+        document.getElementById('clear-logs-btn').addEventListener('click', () => {
+            document.getElementById('logs-container').innerHTML = '';
+        });
+
+        // Handle form submission
+        document.getElementById('pipeline-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (isRunning) {
+                alert('Pipeline is already running!');
+                return;
+            }
+
+            const formData = {
+                project_dir: document.getElementById('project_dir').value,
+                github_url: document.getElementById('github_url').value,
+                tutorials: document.getElementById('tutorials').value,
+                api_key: document.getElementById('api_key').value
+            };
+
+            try {
+                // Start pipeline
+                const response = await fetch('/api/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to start pipeline');
+                }
+
+                isRunning = true;
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('status-indicator').className = 'status-badge status-running';
+                document.getElementById('status-indicator').innerHTML = `
+                    <div class="spinner"></div>
+                    <span>Running</span>
+                `;
+
+                // Clear logs
+                document.getElementById('logs-container').innerHTML = '';
+                addLog('Pipeline started...');
+
+                // Connect to SSE stream
+                connectEventSource();
+
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error(error);
+            }
+        });
+
+        // Connect to Server-Sent Events
+        function connectEventSource() {
+            eventSource = new EventSource('/api/stream');
+
+            eventSource.onmessage = (event) => {
+                const update = JSON.parse(event.data);
+
+                switch (update.type) {
+                    case 'log':
+                        addLog(update.data);
+                        break;
+
+                    case 'state':
+                        const state = update.data;
+                        updateProgress(state.current_step, state.total_steps);
+
+                        // Update steps
+                        state.steps.forEach(step => {
+                            updateStep(step.id, step.status, step.timestamp);
+                        });
+
+                        // Update stats
+                        if (state.elapsed_seconds !== undefined) {
+                            document.getElementById('elapsed-time').textContent =
+                                formatTime(state.elapsed_seconds);
+                        }
+                        if (state.eta_seconds !== undefined && state.eta_seconds !== null) {
+                            document.getElementById('eta-time').textContent =
+                                formatTime(state.eta_seconds);
+                        }
+                        break;
+
+                    case 'complete':
+                        addLog('✅ ' + update.data);
+                        finishPipeline(true);
+                        break;
+
+                    case 'error':
+                        addLog('❌ Error: ' + update.data);
+                        finishPipeline(false);
+                        break;
+
+                    case 'heartbeat':
+                        // Keep connection alive
+                        break;
+                }
+            };
+
+            eventSource.onerror = (error) => {
+                console.error('EventSource error:', error);
+                eventSource.close();
+            };
+        }
+
+        // Finish pipeline
+        function finishPipeline(success) {
+            isRunning = false;
+            document.getElementById('start-btn').disabled = false;
+
+            const statusIndicator = document.getElementById('status-indicator');
+            if (success) {
+                statusIndicator.className = 'status-badge status-completed';
+                statusIndicator.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>Completed</span>
+                `;
+            } else {
+                statusIndicator.className = 'status-badge status-error';
+                statusIndicator.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Error</span>
+                `;
+            }
+
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+        }
+
+        // Initialize
+        renderSteps();
+
+        // Update elapsed time every second
+        setInterval(() => {
+            if (isRunning) {
+                fetch('/api/status')
+                    .then(r => r.json())
+                    .then(state => {
+                        if (state.elapsed_seconds !== undefined) {
+                            document.getElementById('elapsed-time').textContent =
+                                formatTime(state.elapsed_seconds);
+                        }
+                        if (state.eta_seconds !== undefined && state.eta_seconds !== null) {
+                            document.getElementById('eta-time').textContent =
+                                formatTime(state.eta_seconds);
+                        }
+                    })
+                    .catch(console.error);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
