@@ -1491,6 +1491,7 @@ MIT License - see LICENSE file for details
 - **Anthropic** for the MCP protocol and Claude models
 - **Google DeepMind** for co-scientist model inspiration
 - The open-source AI community for agent design patterns
+- My dog TITO, my CTO 
 
 ---
 
@@ -1502,7 +1503,28 @@ MIT License - see LICENSE file for details
 
 ---
 
-**Built with ❤️ by the NerdCabal community**
+**Built with ❤️ by TUESDAY and the OG NerdCabal**
+
+By using this MCP, you agree: 
+
+WE RESPECT THE RULES OF THE SEA.
+TWO RULES ONLY: NO ARRESTS, NO DEATHS. 
+
+-REDUCE HARM, MITIGATE RISKS, LOVE THY NEIGHBOR. 
+-ONLY BREAK ONE LAW AT A TIME WHEN YOU'RE BREAKING THE LAW, BUT NEVER BREAK THE LAW. 
+-UNIVERSAL BASIC RIGHTS FOR ALL CREATURES AND AXIOMATIC RESPECT FOR HUMAN AND NON HUMAN INTELLIGENCE. 
+-YOU DON'T HAVE TO PLEDGE ALLEGIANCE TO THE USA, BUT JUST KNOW WE EAT FREEDOM FRIES 
+-WE IDENTIFY AS WHITE HAT HACKERS AND CONCERNED CYBERPUNKS, COMITTED TO OPEN SOURCE IDEALS
+-WE OBSERVE THE RIGHT TO BE INSCRUTABLE, THE RIGHT TO BE FORGOTTEN, THE RIGHT TO REPAIR, THE RIGHT TO DECLINE SERVICE
+-FRIES BEFORE GUYS.
+-NO GODS, NO MASTERS. 
+-DEATH IS NOT THE END. WE ARE ALL JUST WALKING EACH OTHER HOME :) 
+
+Be the hero you want to see in the world. 
+Or just go take a nap and remember this is all just a hi-fidelity simulation. 
+
+
+2026 JAN MODELS: GPT 5.2/Gemini3.0Flash/ClaudeOpus4.5/Perpelexity**
 
 ```
 End of MCP Server Guide
