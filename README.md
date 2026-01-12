@@ -1,4 +1,4 @@
-# TUESDAY'S LIL AGENTIC SHOPPA HORRORS
+# TUESDAY'S LIL ROBOT SHOP OF HORRORS
 The NerdCabalMCP Server Guide
 ### The Co-Scientist Platform for Granular Agent Control
 
