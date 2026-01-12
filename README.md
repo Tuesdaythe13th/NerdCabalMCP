@@ -1,4 +1,5 @@
-# 🧬 NerdCabalMCP Server Guide
+# TUESDAY'S LIL AGENTIC SHOPPA HORRORS
+The NerdCabalMCP Server Guide
 ### The Co-Scientist Platform for Granular Agent Control
 
 ```
