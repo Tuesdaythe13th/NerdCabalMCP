@@ -1,0 +1,107 @@
+{
+  "description": "Configuration for visual artists (painters, illustrators, digital artists)",
+  "creative_domain": "visual_art",
+  "transport": {
+    "type": "stdio",
+    "notes": "All agent-server communication via stdin/stdout pipes. No network required."
+  },
+  "no_egress": {
+    "enabled": true,
+    "deny_tool_name_patterns": [
+      "save_to_cloud",
+      "upload",
+      "gdrive",
+      "dropbox",
+      "s3",
+      "googleapis",
+      "imgur",
+      "deviantart_upload",
+      "artstation_upload",
+      "http",
+      "https"
+    ],
+    "deny_socket": true,
+    "message": "Blocked by Sovereign Studio No-Egress policy."
+  },
+  "ip_warden": {
+    "similarity_threshold": 0.85,
+    "embedding": {
+      "type": "clip",
+      "model": "ViT-B/32",
+      "notes": "Vision Transformer for image embeddings"
+    },
+    "signature_style": "High-contrast ink linework, bold brushstrokes, mid-century brutalist geometry, cinematic lighting, disciplined negative space, analog grain, anti-surveillance ethos.",
+    "scan_schedule": {
+      "cadence_hours": 24,
+      "sources": [
+        "scraped/artstation",
+        "scraped/pinterest",
+        "scraped/instagram"
+      ]
+    }
+  },
+  "heartbeat": {
+    "ledger": "inspiration.jsonl",
+    "cadence_hours": 4,
+    "drift": {
+      "min_vocab_diversity": 0.22,
+      "min_sentiment_range": 0.18,
+      "notes": "Heuristics to detect creative burnout"
+    },
+    "digital_sabbath": {
+      "trigger_threshold": 0.7,
+      "recommended_duration_hours": 48,
+      "activities": [
+        "Analog sketching (paper + pencil)",
+        "Nature walk (no phone)",
+        "Museum visit",
+        "Read artist biography",
+        "Sleep 8+ hours"
+      ]
+    }
+  },
+  "entourage": [
+    {
+      "name": "IP Warden",
+      "role": "shield",
+      "responsibilities": [
+        "Monitor scraped sources for style theft",
+        "Generate DMCA notices for violations",
+        "Maintain evidence ledger (screenshots + embeddings)"
+      ]
+    },
+    {
+      "name": "Social Media Manager",
+      "role": "pr_lady",
+      "responsibilities": [
+        "Auto-watermark portfolio pieces",
+        "Track credit attribution across platforms",
+        "Draft takedown requests for uncredited reposts"
+      ]
+    },
+    {
+      "name": "Gallery Liaison",
+      "role": "agent",
+      "responsibilities": [
+        "Track submission deadlines (galleries, competitions)",
+        "Review contract terms (red-flag exploitative clauses)",
+        "Manage shipping logistics for physical works"
+      ]
+    },
+    {
+      "name": "Creative Clinician",
+      "role": "pulse",
+      "responsibilities": [
+        "Log heartbeat entries (frequency, palette, notes)",
+        "Detect burnout drift (vocab diversity, sentiment range)",
+        "Recommend Digital Sabbath when needed"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2026-01-14",
+    "author": "tuesday@nerdcabal.org",
+    "license": "MIT"
+  }
+}
