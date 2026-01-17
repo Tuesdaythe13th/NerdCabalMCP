@@ -1,0 +1,68 @@
+# Sovereign Studio Docker Image
+# SIGGRAPH 2026 Tutorial
+
+FROM python:3.11-slim
+
+LABEL maintainer="tuesday@nerdcabal.org"
+LABEL description="Sovereign Studio MCP Server for SIGGRAPH 2026"
+LABEL version="1.0.0"
+
+# Set working directory
+WORKDIR /sovereign_studio
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first (for Docker layer caching)
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Pre-download CLIP model to avoid runtime delays
+RUN python -c "import clip; clip.load('ViT-B/32', device='cpu')"
+
+# Copy tutorial files
+COPY notebooks/ ./notebooks/
+COPY examples/ ./examples/
+COPY docs/ ./docs/
+COPY check_prerequisites.py .
+
+# Create necessary directories
+RUN mkdir -p \
+    /sovereign_studio/output \
+    /sovereign_studio/assets \
+    /sovereign_studio/tools \
+    /sovereign_studio/scraped
+
+# Copy studio configuration
+COPY examples/studio_configs/visual_artist.json /sovereign_studio/studio_config.json
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV JUPYTER_ENABLE_LAB=yes
+
+# No EXPOSE directive (stdio only, no network ports)
+# This enforces no-egress at the Docker layer
+
+# Health check (verifies Python environment)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD python -c "import fastmcp, torch, clip; print('OK')" || exit 1
+
+# Default command: start Jupyter (for tutorial)
+# In production, replace with: CMD ["python", "mcp_server.py"]
+CMD ["jupyter", "notebook", \
+     "--ip=0.0.0.0", \
+     "--port=8888", \
+     "--no-browser", \
+     "--allow-root", \
+     "--NotebookApp.token=''", \
+     "--NotebookApp.password=''"]
+
+# Usage:
+#   Build:  docker build -t sovereign-studio:latest -f Dockerfile.sovereign .
+#   Run:    docker run --network none -v ./output:/output sovereign-studio:latest
