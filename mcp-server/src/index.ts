@@ -51,6 +51,18 @@ import { generateVisualInspectorOutput, VISUAL_INSPECTOR_AGENT_CARD } from './vi
 import type { VisualInspectorRequest } from './visual-inspector-types.js';
 import { generateForensicAnalysis, FORENSIC_ANALYST_AGENT_CARD } from './forensic-analyst.js';
 import type { ForensicAnalystRequest } from './forensic-analyst-types.js';
+import {
+  generateIPAnalytics,
+  generateComplianceCheck,
+  generateArchivalEntry,
+  IP_PROTECTION_SUITE_CARD,
+  IP_ANALYTICS_TOOL_SCHEMA,
+  COMPLIANCE_ENGINE_TOOL_SCHEMA,
+  ARCHIVAL_SYSTEM_TOOL_SCHEMA
+} from './ip-protection-suite.js';
+import type { IPAnalyticsArgs } from './ip-analytics.js';
+import type { ComplianceCheck } from './compliance-engine.js';
+import type { ArchiveArgs } from './archival-system.js';
 
 const server = new Server(
   {
@@ -893,6 +905,9 @@ const tools: Tool[] = [
       required: ['transcript'],
     },
   },
+  IP_ANALYTICS_TOOL_SCHEMA,
+  COMPLIANCE_ENGINE_TOOL_SCHEMA,
+  ARCHIVAL_SYSTEM_TOOL_SCHEMA,
 ];
 
 /**
@@ -1605,6 +1620,57 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 null,
                 2
               ),
+            },
+          ],
+        };
+      }
+
+      case 'ip_analytics': {
+        if (!args || typeof args !== 'object') {
+          throw new Error('Invalid arguments');
+        }
+        const analyticsArgs = args as unknown as IPAnalyticsArgs;
+        const output = generateIPAnalytics(analyticsArgs);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(output, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'compliance_check': {
+        if (!args || typeof args !== 'object') {
+          throw new Error('Invalid arguments');
+        }
+        const complianceArgs = args as unknown as ComplianceCheck;
+        const output = generateComplianceCheck(complianceArgs);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(output, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'archival_system': {
+        if (!args || typeof args !== 'object') {
+          throw new Error('Invalid arguments');
+        }
+        const archiveArgs = args as unknown as ArchiveArgs;
+        const output = generateArchivalEntry(archiveArgs);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(output, null, 2),
             },
           ],
         };
