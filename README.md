@@ -36,16 +36,18 @@ contact tuesday@artifex.fun if you have somethin' to fuckin say.
 
 ## 🤔 What is NerdCabalMCP?
 
-**NerdCabalMCP** is a Model Context Protocol (MCP) server that provides a **co-scientist platform** for AI-assisted research, operations, and creative work. Think of it as your personal team of 14 specialized AI experts, each with deep domain knowledge and the ability to collaborate seamlessly.
+**NerdCabalMCP** is a Model Context Protocol (MCP) server that provides a **co-scientist platform** for AI-assisted research, operations, creative work, and enterprise IP protection. Think of it as your personal team of 17 specialized AI experts, each with deep domain knowledge and the ability to collaborate seamlessly.
 
 ### Key Features
 
-- **🧠 14 Specialized Agents**: From financial planning to neural forensics
+- **🧠 17 Specialized Agents**: From financial planning to neural forensics to enterprise IP protection
+- **🛡️ Enterprise IP Protection Suite (NEW)**: IP analytics, compliance validation, cryptographic archival
 - **🔗 A2A Protocol Compliant**: Agent-to-Agent communication following Anthropic Design Kit standards
 - **🏗️ Modular Architecture**: Each agent is independently deployable and upgradeable
 - **🔐 Security-First**: Built-in CISO agent with STRIDE threat modeling
-- **📊 Production-Ready**: TypeScript implementation with full type safety
+- **📊 Production-Ready**: TypeScript + Python implementation with full type safety
 - **🌐 Multi-Platform**: Integrates with Claude Desktop, Streamlit, HuggingFace Spaces, and more
+- **⚖️ Multi-Jurisdiction Support**: US, EU, UK compliance validation (advisory, not legal advice)
 
 ---
 
@@ -69,11 +71,103 @@ Traditional AI tools give you one-size-fits-all assistants. NerdCabalMCP gives y
 
 ---
 
-## 👥 The 14 Agent Team
+## 👥 The 17 Agent Team
+
+### 🛡️ Enterprise IP Protection (NEW - January 2026)
+
+#### 1. **IP Analytics Engine**
+**Role**: Enterprise IP Intelligence & Pattern Detection
+**Expertise**: Patent/trademark/copyright pattern analysis, portfolio valuation, competitive scanning, geographic risk mapping
+
+**Use Cases**:
+- Detecting IP infringement patterns across large datasets
+- Geographic risk heatmaps for jurisdiction-specific threats
+- Portfolio valuation dashboards for asset management
+- Competitive infringement pattern scoring
+
+**Example**:
+```json
+{
+  "tool": "ip_analytics",
+  "action": "analyze_patterns",
+  "data": {
+    "ip_type": "copyright",
+    "timeframe_days": 90,
+    "portfolio_ids": ["PORT-001", "PORT-002"]
+  },
+  "jurisdiction": "US"
+}
+```
+
+**Key Features**:
+- Real-time pattern detection using ML bibliometrics
+- Cross-jurisdictional risk scoring (US, EU, UK)
+- ROI-based litigation opportunity ranking
+- Integration with USPTO/EPO/WIPO data sources
+
+#### 2. **Compliance Engine**
+**Role**: Multi-Jurisdiction Governance & Policy Validation
+**Expertise**: GDPR, DMCA, EU Copyright Directive, AI Act compliance validation
+
+**Use Cases**:
+- Pre-enforcement compliance checks for DMCA takedowns
+- GDPR audit trail generation for IP monitoring
+- EU Copyright Directive Article 17 compliance
+- AI Act risk assessment for automated detection systems
+
+**Example**:
+```json
+{
+  "tool": "compliance_check",
+  "action": "validate",
+  "context": {
+    "processes_personal_data": true,
+    "consent_obtained": true,
+    "takedown_notice_sent": false,
+    "ai_training_data": false
+  },
+  "jurisdiction": "EU"
+}
+```
+
+**Important**: Advisory only - not legal advice. All enforcement actions require human review.
+
+#### 3. **Archival System**
+**Role**: Cryptographic Evidence Storage & Chain-of-Custody
+**Expertise**: SHA-256 chain hashing, tamper-proof evidence archival, legal admissibility preparation
+
+**Use Cases**:
+- Storing IP infringement evidence with cryptographic integrity
+- Maintaining chain-of-custody for litigation
+- Generating tamper-proof audit trails
+- Preparing evidence packages for legal proceedings
+
+**Example**:
+```json
+{
+  "tool": "archival_system",
+  "action": "store",
+  "evidence": {
+    "type": "image",
+    "source": "https://example.com/infringement.jpg",
+    "description": "Unauthorized use of copyrighted work",
+    "jurisdiction": "US",
+    "case_id": "CASE-2026-001"
+  }
+}
+```
+
+**Key Features**:
+- SHA-256 chain hashing for tamper detection
+- Append-only ledger architecture
+- Metadata preservation for legal contexts
+- Integrity verification tools
+
+---
 
 ### 🔬 Research & Evaluation
 
-#### 1. **LLM-Rubric Architect**
+#### 4. **LLM-Rubric Architect**
 **Role**: Evaluation Framework Designer
 **Expertise**: Creates comprehensive rubrics for LLM evaluation, benchmark design, and quality criteria
 
@@ -92,7 +186,7 @@ Traditional AI tools give you one-size-fits-all assistants. NerdCabalMCP gives y
 }
 ```
 
-#### 2. **Experimental Designer**
+#### 5. **Experimental Designer**
 **Role**: Research Methodology Specialist
 **Expertise**: Hypothesis formulation, experimental design, statistical power analysis
 
@@ -336,7 +430,7 @@ npm run build
 
 ```bash
 # 5. Restart Claude Desktop
-# Your 14 agents are now available!
+# Your 17 agents are now available! (14 original + 3 IP protection tools)
 ```
 
 ---
@@ -744,6 +838,9 @@ H1: Chain-of-thought produces higher accuracy
 │                   (index.ts)                        │
 ├─────────────────────────────────────────────────────┤
 │  Tool Router                                        │
+│   ├─ ip_analytics (NEW)                            │
+│   ├─ compliance_check (NEW)                        │
+│   ├─ archival_system (NEW)                         │
 │   ├─ llm-rubric-architect                          │
 │   ├─ experimental-designer                         │
 │   ├─ budget-agent                                  │
@@ -1457,7 +1554,7 @@ curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
   -d '{"method": "health"}'
 
-# Should return: {"status": "ok", "agents": 14}
+# Should return: {"status": "ok", "agents": 17}
 ```
 
 ---
@@ -1501,6 +1598,8 @@ MIT License - see LICENSE file for details
 ## 📧 Support
 
 - **Documentation**: You're reading it!
+- **Enterprise IP Protection Guide**: See `README_ENTERPRISE_IP.md` for watermarking, monitoring, and compliance details
+- **Corrected Claims**: See `CORRECTED_DOCUMENTATION.md` for accurate technical claims (Jan 2026)
 - **Issues**: [GitHub Issues](https://github.com/Tuesdaythe13th/NerdCabalMCP/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/Tuesdaythe13th/NerdCabalMCP/discussions)
 
