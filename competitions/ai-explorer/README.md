@@ -7,7 +7,7 @@
 **Full Name:** Live AI Threat Tracking & Interpretability Coordination Engine
 **Category:** AI Safety & Interpretability Marketplace
 **Platform:** Built on NerdCabalMCP Infrastructure
-**Applicant:** [Your Name]
+**Applicant:** TUESDAY 
 **Date:** January 2026
 
 ---
@@ -184,12 +184,12 @@ When the next AI incident happens:
 
 ## 📧 Contact
 
-**Applicant:** [Your Name]
-**Email:** [your-email]
+**Applicant:** TUESDAY
+**Email:** TUESDAY@ARTIFEX.FUN
 **GitHub:** [@Tuesdaythe13th](https://github.com/Tuesdaythe13th)
-**Website:** [artifex.fun](https://artifex.fun)
+**Website:** [artifex.fun](https://www.lintr.ee/artifexlabs)
 
-**Schedule Interview:** [Calendly Link]
+**Schedule Interview:** [zcal.co/tuesday]
 
 ---
 
