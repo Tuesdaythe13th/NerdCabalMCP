@@ -3,9 +3,13 @@
 
 **The X-Ray for AI Interactions**
 
-### AI Safety Marketplace & Real-Time Threat Intelligence Platform
+### AI Safety Marketplace & Real-Time Threat Intelligence Platformz
 
-**by [Your Name] - AI Explorer Submission**
+**by TUESDAY - AI Explorer Submission**
+
+- LINKS: linktr.ee/artifexlabs 
+- LINKEDIN: linkedin.com/222tuesday
+- SCHOLAR: https://scholar.google.com/citations?hl=en&user=z71m_nIAAAAJ&view_op=list_works&authuser=1
 
 ---
 
@@ -16,6 +20,8 @@
 *Stylized as: L4TT1C3*
 
 Built on the NerdCabalMCP infrastructure, LATTICE is the coordination layer for AI safety at scale — a multimodal X-ray platform that transforms black-box AI systems into transparent, interpretable, and safe technology.
+
+Presentation: https://www.canva.com/design/DAG-1LfHXd0/jiTRJj0WTlwjmNCpak1Rmg/view?utm_content=DAG-1LfHXd0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd6c69456aa
 
 ---
 
