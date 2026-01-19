@@ -314,8 +314,9 @@ That's not just a business. That's a responsibility.
 - **Live Demo:** [GitHub - LATTICE](https://github.com/Tuesdaythe13th/LATTICE)
 - **Documentation:** Full MCP integration guides, tutorials
 - **A2UI Prototype:** [Link to deployed demo]
-- **Email:** [your-email]
-- **Calendar:** [Schedule 15-min call]
+- **Email:** [tuesday@artifex.fun]
+- **Calendar:** [zcal.co/tuesday]
+- **Text me:** +1 971-319-1878
 
 ---
 
