@@ -1,6 +1,6 @@
-# TUESDAY'S LIL ROBOT SHOP OF HORRORS
-Salutations. This is the official ARTIFEX LABS NerdCabalMCP Server Guide. 
-contact tuesday@artifex.fun if you have somethin' to fuckin say. 
+A GIFT FROM TUESDAY'S LITTLE SHOP OF EXISTENTIAL HORRORS
+
+
 
 ### The Co-Scientist Platform for Granular Agent Control
 
