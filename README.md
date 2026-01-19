@@ -20,6 +20,7 @@ contact tuesday@artifex.fun if you have somethin' to fuckin say.
 ## 📚 Table of Contents
 
 - [What is NerdCabalMCP?](#what-is-nerdcabalmcp)
+- [Repository Structure](#repository-structure)
 - [Core Philosophy](#core-philosophy)
 - [The 14 Agent Team](#the-14-agent-team)
 - [Quick Start](#quick-start)
@@ -31,6 +32,48 @@ contact tuesday@artifex.fun if you have somethin' to fuckin say.
 - [API Reference](#api-reference)
 - [Advanced Usage](#advanced-usage)
 - [Troubleshooting](#troubleshooting)
+
+---
+
+## 📁 Repository Structure
+
+```
+NerdCabalMCP/
+├── competitions/          # Competition submissions
+│   └── ai-explorer/       # 🏆 AI Explorer hackathon (Beta Fund)
+│       ├── README.md
+│       ├── AI_EXPLORER_SUBMISSION.md
+│       └── AI_Explorer_Hackathon_Demo.ipynb
+├── docs/                  # 📖 Documentation
+│   ├── README.md
+│   ├── QUICK_START.md
+│   ├── MCP_SERVER_GUIDE.md
+│   ├── ARTIFEX_NERD_SWARM_ARCHITECTURE.md
+│   └── ... (see docs/README.md for full list)
+├── notebooks/             # 📓 Jupyter notebooks
+│   ├── README.md
+│   └── MATS_Neural_Forensics_Demo.ipynb
+├── mcp-server/            # 🔧 MCP server implementation
+│   ├── src/
+│   │   ├── index.ts       # Main server
+│   │   └── agents/        # 14 specialized agents
+│   └── package.json
+├── scripts/               # 🛠️ Utility scripts
+│   ├── Paper2Agent.sh
+│   └── launch_remote_mcp.sh
+├── tutorials/             # 🎓 Tutorial content
+│   └── siggraph-2026-sovereign-studio/
+├── agents/                # 🤖 Agent definitions
+├── prompts/               # 💬 Prompt templates
+├── templates/             # 📋 Project templates
+└── README.md              # 👈 You are here
+```
+
+### Quick Links
+- **🏆 Hackathon Submission:** [competitions/ai-explorer/](./competitions/ai-explorer/)
+- **📖 Full Documentation:** [docs/](./docs/)
+- **📓 Demo Notebooks:** [notebooks/](./notebooks/)
+- **🚀 Quick Start Guide:** [docs/QUICK_START.md](./docs/QUICK_START.md)
 
 ---
 
