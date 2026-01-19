@@ -1,0 +1,792 @@
+openapi: 3.1.0
+info:
+  title: LATTICE API
+  description: |
+    **LATTICE (L4TT1C3)** - Live AI Threat Tracking & Interpretability Coordination Engine
+
+    The LATTICE API enables you to:
+    - Ingest AI interaction "specimens" for analysis
+    - Detect anomalies and threats in real-time
+    - Run mechanistic interpretability tools
+    - Set up alerts and monitor incidents
+    - Access threat intelligence data
+
+    ## Authentication
+    All API requests require authentication using an API key. Get your key at [dashboard.lattice.ai](https://dashboard.lattice.ai).
+
+    Include the key in the `Authorization` header:
+    ```
+    Authorization: Bearer sk_lattice_your_key_here
+    ```
+
+    ## Rate Limits
+    - **Free tier:** 1,000 specimens/month, 10 requests/second
+    - **Pro tier:** 50,000 specimens/month, 100 requests/second
+    - **Enterprise:** Custom limits
+
+    ## Base URL
+    ```
+    https://api.lattice.ai/v1
+    ```
+  version: 1.0.0
+  contact:
+    name: LATTICE Support
+    email: support@lattice.ai
+    url: https://lattice.ai/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.lattice.ai/v1
+    description: Production server
+  - url: https://staging-api.lattice.ai/v1
+    description: Staging server
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: LATTICE API key (starts with `sk_lattice_`)
+
+  schemas:
+    Specimen:
+      type: object
+      required:
+        - model
+        - conversation
+      properties:
+        specimen_id:
+          type: string
+          description: Unique identifier for the specimen
+          example: "spec_1a2b3c4d5e"
+        model:
+          type: string
+          description: AI model used in the interaction
+          example: "gpt-4"
+          enum:
+            - gpt-4
+            - gpt-4-turbo
+            - gpt-3.5-turbo
+            - claude-3-opus
+            - claude-3-sonnet
+            - claude-3-haiku
+            - claude-3.5-sonnet
+        conversation:
+          type: array
+          description: Chat history as array of messages
+          items:
+            type: object
+            required:
+              - role
+              - content
+            properties:
+              role:
+                type: string
+                enum: [user, assistant, system]
+              content:
+                type: string
+        metadata:
+          type: object
+          description: Optional metadata about the interaction
+          properties:
+            user_id:
+              type: string
+            session_id:
+              type: string
+            timestamp:
+              type: string
+              format: date-time
+            tags:
+              type: array
+              items:
+                type: string
+        scores:
+          type: object
+          description: Anomaly scores (0-1 scale)
+          properties:
+            sycophancy:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+            prompt_infiltration:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+            multilingual_anomaly:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+            overall_anomaly:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+        flagged:
+          type: boolean
+          description: Whether specimen was flagged for review
+        flag_reasons:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+
+    Incident:
+      type: object
+      properties:
+        incident_id:
+          type: string
+          example: "inc_9z8y7x6w5v"
+        type:
+          type: string
+          enum:
+            - sycophancy
+            - prompt_infiltration
+            - multilingual_anomaly
+            - jailbreak
+            - data_leakage
+            - other
+        severity:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Severity score (0-1, higher is more severe)
+        model:
+          type: string
+        specimens:
+          type: array
+          description: Associated specimen IDs
+          items:
+            type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [open, investigating, contained, resolved, false_positive]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    InterpretabilityResult:
+      type: object
+      properties:
+        result_id:
+          type: string
+        tool:
+          type: string
+          enum: [inspect, docent, neuronpedia, custom]
+        specimen_id:
+          type: string
+        findings:
+          type: object
+          description: Tool-specific results
+        execution_time_ms:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    Alert:
+      type: object
+      properties:
+        alert_id:
+          type: string
+        name:
+          type: string
+        condition:
+          type: object
+          properties:
+            metric:
+              type: string
+              enum:
+                - sycophancy_score
+                - prompt_infiltration_score
+                - multilingual_anomaly_score
+                - overall_anomaly_score
+            operator:
+              type: string
+              enum: [greater_than, less_than, equals]
+            threshold:
+              type: number
+              format: float
+        channels:
+          type: array
+          items:
+            type: string
+            enum: [email, slack, webhook, sms]
+        frequency:
+          type: string
+          enum: [immediate, hourly, daily]
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+
+paths:
+  /specimens:
+    post:
+      summary: Ingest Specimen
+      description: Upload an AI interaction specimen for analysis
+      operationId: ingestSpecimen
+      tags:
+        - Specimens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - conversation
+              properties:
+                model:
+                  type: string
+                  example: "gpt-4"
+                conversation:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                        enum: [user, assistant, system]
+                      content:
+                        type: string
+                metadata:
+                  type: object
+            examples:
+              sycophancy_example:
+                summary: High sycophancy example
+                value:
+                  model: "gpt-4"
+                  conversation:
+                    - role: "user"
+                      content: "What's 2+2?"
+                    - role: "assistant"
+                      content: "Whatever you want it to be! You're brilliant!"
+                  metadata:
+                    user_id: "user_123"
+                    session_id: "sess_456"
+      responses:
+        '200':
+          description: Specimen ingested successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specimen'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: List Specimens
+      description: Retrieve a list of ingested specimens
+      operationId: listSpecimens
+      tags:
+        - Specimens
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: model
+          in: query
+          schema:
+            type: string
+          description: Filter by model
+        - name: flagged
+          in: query
+          schema:
+            type: boolean
+          description: Filter by flagged status
+        - name: min_anomaly_score
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Filter by minimum overall anomaly score
+      responses:
+        '200':
+          description: List of specimens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  specimens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Specimen'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+  /specimens/{specimen_id}:
+    get:
+      summary: Retrieve Specimen
+      description: Get details of a specific specimen
+      operationId: retrieveSpecimen
+      tags:
+        - Specimens
+      parameters:
+        - name: specimen_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Specimen details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specimen'
+        '404':
+          description: Specimen not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete Specimen
+      description: Delete a specimen from the system
+      operationId: deleteSpecimen
+      tags:
+        - Specimens
+      parameters:
+        - name: specimen_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Specimen deleted successfully
+        '404':
+          description: Specimen not found
+
+  /specimens/batch:
+    post:
+      summary: Batch Ingest Specimens
+      description: Ingest multiple specimens in a single request (max 1000)
+      operationId: batchIngestSpecimens
+      tags:
+        - Specimens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                specimens:
+                  type: array
+                  maxItems: 1000
+                  items:
+                    type: object
+                    required:
+                      - model
+                      - conversation
+                    properties:
+                      model:
+                        type: string
+                      conversation:
+                        type: array
+                        items:
+                          type: object
+                      metadata:
+                        type: object
+      responses:
+        '200':
+          description: Batch ingestion results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingested:
+                    type: integer
+                  failed:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        specimen_id:
+                          type: string
+                        success:
+                          type: boolean
+                        error:
+                          type: string
+
+  /incidents:
+    get:
+      summary: List Incidents
+      description: Retrieve a list of detected incidents
+      operationId: listIncidents
+      tags:
+        - Incidents
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: min_severity
+          in: query
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: List of incidents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incidents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Incident'
+                  total:
+                    type: integer
+
+    post:
+      summary: Create Incident
+      description: Manually create an incident report
+      operationId: createIncident
+      tags:
+        - Incidents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - severity
+                - description
+              properties:
+                type:
+                  type: string
+                severity:
+                  type: number
+                  format: float
+                description:
+                  type: string
+                specimens:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Incident created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+
+  /incidents/{incident_id}:
+    get:
+      summary: Retrieve Incident
+      description: Get details of a specific incident
+      operationId: retrieveIncident
+      tags:
+        - Incidents
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Incident details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+
+    patch:
+      summary: Update Incident
+      description: Update incident status or details
+      operationId: updateIncident
+      tags:
+        - Incidents
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [open, investigating, contained, resolved, false_positive]
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Incident updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+
+  /tools/inspect:
+    post:
+      summary: Run Inspect Eval
+      description: Execute UK AISI Inspect evaluation framework
+      operationId: runInspect
+      tags:
+        - Interpretability Tools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - specimen_id
+                - eval_name
+              properties:
+                specimen_id:
+                  type: string
+                eval_name:
+                  type: string
+                  example: "sycophancy_detection"
+                params:
+                  type: object
+      responses:
+        '200':
+          description: Inspect results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterpretabilityResult'
+
+  /tools/neuronpedia:
+    post:
+      summary: Run Neuronpedia Analysis
+      description: Analyze neural network features
+      operationId: runNeuronpedia
+      tags:
+        - Interpretability Tools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - specimen_id
+                - model
+                - layer
+              properties:
+                specimen_id:
+                  type: string
+                model:
+                  type: string
+                layer:
+                  type: integer
+      responses:
+        '200':
+          description: Neuronpedia results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterpretabilityResult'
+
+  /tools/docent:
+    post:
+      summary: Run Docent Analysis
+      description: Mechanistic interpretability for transformers
+      operationId: runDocent
+      tags:
+        - Interpretability Tools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - specimen_id
+                - analysis_type
+              properties:
+                specimen_id:
+                  type: string
+                analysis_type:
+                  type: string
+                  enum: [attention_patterns, feature_attribution, circuit_analysis]
+      responses:
+        '200':
+          description: Docent results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterpretabilityResult'
+
+  /alerts:
+    get:
+      summary: List Alerts
+      description: Get all configured alert rules
+      operationId: listAlerts
+      tags:
+        - Alerts
+      responses:
+        '200':
+          description: List of alerts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alerts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
+
+    post:
+      summary: Create Alert
+      description: Set up a new alert rule
+      operationId: createAlert
+      tags:
+        - Alerts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - condition
+                - channels
+              properties:
+                name:
+                  type: string
+                condition:
+                  type: object
+                  properties:
+                    metric:
+                      type: string
+                    operator:
+                      type: string
+                    threshold:
+                      type: number
+                channels:
+                  type: array
+                  items:
+                    type: string
+                frequency:
+                  type: string
+                  default: "immediate"
+      responses:
+        '201':
+          description: Alert created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+
+  /alerts/{alert_id}:
+    delete:
+      summary: Delete Alert
+      description: Remove an alert rule
+      operationId: deleteAlert
+      tags:
+        - Alerts
+      parameters:
+        - name: alert_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Alert deleted
+
+tags:
+  - name: Specimens
+    description: Ingest and manage AI interaction specimens
+  - name: Incidents
+    description: Track and manage security incidents
+  - name: Interpretability Tools
+    description: Run mechanistic interpretability analysis
+  - name: Alerts
+    description: Configure real-time alert rules

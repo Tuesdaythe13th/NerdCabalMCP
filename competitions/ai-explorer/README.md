@@ -130,12 +130,14 @@ When the next AI incident happens:
 
 ## 📞 Links & Resources
 
-### Repository
-- **Main Repo:** [NerdCabalMCP](https://github.com/Tuesdaythe13th/NerdCabalMCP)
-- **Competition Folder:** `/competitions/ai-explorer/`
+### Repositories
+- **LATTICE Product:** [github.com/Tuesdaythe13th/lattice](https://github.com/Tuesdaythe13th/lattice) ← Production app
+- **Platform Infrastructure:** [NerdCabalMCP](https://github.com/Tuesdaythe13th/NerdCabalMCP) ← 14 agents + MCP server
+- **Competition Folder:** `/competitions/ai-explorer/` (you are here)
 - **Live Demo:** Run `AI_Explorer_Hackathon_Demo.ipynb`
 
 ### Documentation
+- **LATTICE Docs:** Coming soon to docs.lattice.ai (Mintlify)
 - **Platform Architecture:** See main submission README
 - **MCP Integration:** [docs/MCP_SERVER_GUIDE.md](../../docs/MCP_SERVER_GUIDE.md)
 - **API Reference:** [docs/API_KEY_MANAGEMENT.md](../../docs/API_KEY_MANAGEMENT.md)

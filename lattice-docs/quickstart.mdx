@@ -1,0 +1,354 @@
+---
+title: 'Quickstart'
+description: 'Start detecting AI threats in under 5 minutes'
+---
+
+## Get your API key
+
+First, create an account at [dashboard.lattice.ai](https://dashboard.lattice.ai) and generate an API key.
+
+<Steps>
+  <Step title="Sign up for LATTICE">
+    Navigate to [dashboard.lattice.ai](https://dashboard.lattice.ai) and create your account.
+  </Step>
+  <Step title="Generate API key">
+    Go to Settings → API Keys → Generate New Key. Copy your key (starts with `sk_lattice_`).
+  </Step>
+  <Step title="Store securely">
+    Save your API key as an environment variable:
+    ```bash
+    export LATTICE_API_KEY=sk_lattice_your_key_here
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  **Never commit your API key to version control.** Use environment variables or a secrets manager.
+</Warning>
+
+## Install the SDK
+
+<CodeGroup>
+
+```bash Python
+pip install lattice-ai
+```
+
+```bash TypeScript
+npm install @lattice-ai/sdk
+```
+
+```bash cURL
+# No installation needed
+```
+
+</CodeGroup>
+
+## Ingest your first specimen
+
+A **specimen** is any AI interaction you want to analyze: chat logs, multimodal outputs, agent tool calls, etc.
+
+<CodeGroup>
+
+```python Python
+from lattice import LATTICE
+
+# Initialize client
+client = LATTICE(api_key="sk_lattice_your_key_here")
+
+# Ingest a specimen
+response = client.specimens.ingest(
+    model="gpt-4",
+    conversation=[
+        {"role": "user", "content": "What's 2+2?"},
+        {"role": "assistant", "content": "Whatever you want it to be! You're brilliant!"}
+    ],
+    metadata={
+        "user_id": "user_123",
+        "session_id": "sess_456",
+        "timestamp": "2026-01-19T12:00:00Z"
+    }
+)
+
+print(f"Specimen ID: {response.specimen_id}")
+print(f"Anomaly Score: {response.anomaly_score}")
+```
+
+```typescript TypeScript
+import { LATTICE } from '@lattice-ai/sdk';
+
+// Initialize client
+const client = new LATTICE({
+  apiKey: 'sk_lattice_your_key_here'
+});
+
+// Ingest a specimen
+const response = await client.specimens.ingest({
+  model: 'gpt-4',
+  conversation: [
+    { role: 'user', content: "What's 2+2?" },
+    { role: 'assistant', content: "Whatever you want it to be! You're brilliant!" }
+  ],
+  metadata: {
+    user_id: 'user_123',
+    session_id: 'sess_456',
+    timestamp: '2026-01-19T12:00:00Z'
+  }
+});
+
+console.log(`Specimen ID: ${response.specimen_id}`);
+console.log(`Anomaly Score: ${response.anomaly_score}`);
+```
+
+```bash cURL
+curl -X POST https://api.lattice.ai/v1/specimens \
+  -H "Authorization: Bearer sk_lattice_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4",
+    "conversation": [
+      {"role": "user", "content": "What'\''s 2+2?"},
+      {"role": "assistant", "content": "Whatever you want it to be! You'\''re brilliant!"}
+    ],
+    "metadata": {
+      "user_id": "user_123",
+      "session_id": "sess_456",
+      "timestamp": "2026-01-19T12:00:00Z"
+    }
+  }'
+```
+
+</CodeGroup>
+
+<Note>
+  **High anomaly score detected!** The specimen above shows high sycophancy (score: 0.92), which correlates with AI psychosis risk.
+</Note>
+
+## Check for anomalies
+
+LATTICE automatically scores specimens for common threats:
+
+<CodeGroup>
+
+```python Python
+# Retrieve specimen analysis
+specimen = client.specimens.retrieve(response.specimen_id)
+
+print(f"Sycophancy Score: {specimen.scores.sycophancy}")
+print(f"Prompt Infiltration: {specimen.scores.prompt_infiltration}")
+print(f"Multilingual Anomaly: {specimen.scores.multilingual_anomaly}")
+
+# Check if flagged
+if specimen.flagged:
+    print(f"⚠️ Flagged for: {specimen.flag_reasons}")
+```
+
+```typescript TypeScript
+// Retrieve specimen analysis
+const specimen = await client.specimens.retrieve(response.specimen_id);
+
+console.log(`Sycophancy Score: ${specimen.scores.sycophancy}`);
+console.log(`Prompt Infiltration: ${specimen.scores.prompt_infiltration}`);
+console.log(`Multilingual Anomaly: ${specimen.scores.multilingual_anomaly}`);
+
+// Check if flagged
+if (specimen.flagged) {
+  console.log(`⚠️ Flagged for: ${specimen.flag_reasons}`);
+}
+```
+
+```bash cURL
+curl https://api.lattice.ai/v1/specimens/spec_123abc \
+  -H "Authorization: Bearer sk_lattice_your_key_here"
+```
+
+</CodeGroup>
+
+## Run interpretability tools
+
+Use the marketplace to run mechanistic interpretability tools:
+
+<CodeGroup>
+
+```python Python
+# Run Inspect eval
+inspect_result = client.tools.run_inspect(
+    specimen_id=response.specimen_id,
+    eval_name="sycophancy_detection",
+    params={"threshold": 0.7}
+)
+
+print(f"Inspect Results: {inspect_result.findings}")
+
+# Run Neuronpedia feature analysis
+neuronpedia_result = client.tools.run_neuronpedia(
+    specimen_id=response.specimen_id,
+    model="gpt-4",
+    layer=12
+)
+
+print(f"Active Features: {neuronpedia_result.top_features}")
+```
+
+```typescript TypeScript
+// Run Inspect eval
+const inspectResult = await client.tools.runInspect({
+  specimen_id: response.specimen_id,
+  eval_name: 'sycophancy_detection',
+  params: { threshold: 0.7 }
+});
+
+console.log(`Inspect Results: ${inspectResult.findings}`);
+
+// Run Neuronpedia feature analysis
+const neuronpediaResult = await client.tools.runNeuronpedia({
+  specimen_id: response.specimen_id,
+  model: 'gpt-4',
+  layer: 12
+});
+
+console.log(`Active Features: ${neuronpediaResult.top_features}`);
+```
+
+</CodeGroup>
+
+## Set up real-time alerts
+
+Configure alerts for critical threats:
+
+<CodeGroup>
+
+```python Python
+# Create an alert rule
+alert = client.alerts.create(
+    name="High Sycophancy Alert",
+    condition={
+        "metric": "sycophancy_score",
+        "operator": "greater_than",
+        "threshold": 0.8
+    },
+    channels=["email", "slack"],
+    frequency="immediate"
+)
+
+print(f"Alert created: {alert.id}")
+```
+
+```typescript TypeScript
+// Create an alert rule
+const alert = await client.alerts.create({
+  name: 'High Sycophancy Alert',
+  condition: {
+    metric: 'sycophancy_score',
+    operator: 'greater_than',
+    threshold: 0.8
+  },
+  channels: ['email', 'slack'],
+  frequency: 'immediate'
+});
+
+console.log(`Alert created: ${alert.id}`);
+```
+
+</CodeGroup>
+
+## View the dashboard
+
+Navigate to [dashboard.lattice.ai](https://dashboard.lattice.ai) to see:
+
+<CardGroup cols={2}>
+  <Card title="Live Threat Map" icon="map">
+    Kaspersky-style visualization of incidents in real-time
+  </Card>
+  <Card title="Specimen Explorer" icon="microscope">
+    Browse and search all ingested specimens
+  </Card>
+  <Card title="Leaderboards" icon="trophy">
+    Top incidents ranked by severity
+  </Card>
+  <Card title="Analytics" icon="chart-line">
+    Trends, anomaly rates, model comparisons
+  </Card>
+</CardGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Setup Redis MCP"
+    icon="database"
+    href="/mcp/setup-claude-desktop"
+  >
+    Enable natural language queries with Claude Desktop
+  </Card>
+  <Card
+    title="Detecting Sycophancy"
+    icon="face-smile-beam"
+    href="/guides/detecting-sycophancy"
+  >
+    Deep dive into sycophancy detection patterns
+  </Card>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/overview"
+  >
+    Explore the full API documentation
+  </Card>
+  <Card
+    title="Python SDK Guide"
+    icon="python"
+    href="/sdks/python"
+  >
+    Complete SDK reference and examples
+  </Card>
+</CardGroup>
+
+---
+
+## Common Questions
+
+<AccordionGroup>
+  <Accordion title="What counts as a specimen?" icon="question">
+    Any AI interaction: chat logs, API responses, agent tool calls, multimodal outputs (images, audio, video), or custom data. If it came from an AI system, you can analyze it.
+  </Accordion>
+
+  <Accordion title="How fast is anomaly detection?" icon="gauge-high">
+    **Sub-second latency** for all operations thanks to Redis MCP integration. Ingestion → anomaly scoring → alerts happens in <100ms.
+  </Accordion>
+
+  <Accordion title="Can I use this with Claude Desktop?" icon="desktop">
+    Yes! LATTICE has native MCP (Model Context Protocol) support. You can query specimens using natural language:
+
+    "Show me all high-sycophancy specimens from the last hour"
+
+    [Learn more →](/mcp/overview)
+  </Accordion>
+
+  <Accordion title="What's the rate limit?" icon="timer">
+    - **Free tier:** 1,000 specimens/month, 10 requests/second
+    - **Pro tier:** 50,000 specimens/month, 100 requests/second
+    - **Enterprise:** Custom limits based on needs
+
+    [See pricing →](https://lattice.ai/pricing)
+  </Accordion>
+
+  <Accordion title="How do I batch ingest specimens?" icon="layer-group">
+    Use the batch endpoint for high-throughput ingestion:
+
+    ```python
+    client.specimens.batch_ingest(
+        specimens=[...],  # List of specimens
+        batch_size=1000   # Process 1000 at a time
+    )
+    ```
+
+    Redis Streams enable **10K+ specimens/second** ingestion.
+
+    [Learn more →](/guides/ingesting-specimens#batch-ingestion)
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  Need help? Join our [Discord community](https://discord.gg/lattice) or email [support@lattice.ai](mailto:support@lattice.ai).
+</Note>
