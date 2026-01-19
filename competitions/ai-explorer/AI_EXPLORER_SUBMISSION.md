@@ -1,7 +1,21 @@
-# NerdCabalMCP: The X-Ray for AI Interactions
+# LATTICE (L4TT1C3)
+## Live AI Threat Tracking & Interpretability Coordination Engine
+
+**The X-Ray for AI Interactions**
+
 ### AI Safety Marketplace & Real-Time Threat Intelligence Platform
 
 **by [Your Name] - AI Explorer Submission**
+
+---
+
+## 🔮 **What is LATTICE?**
+
+**LATTICE** = **L**ive **A**I **T**hreat **T**racking & **I**nterpretability **C**oordination **E**ngine
+
+*Stylized as: L4TT1C3*
+
+Built on the NerdCabalMCP infrastructure, LATTICE is the coordination layer for AI safety at scale — a multimodal X-ray platform that transforms black-box AI systems into transparent, interpretable, and safe technology.
 
 ---
 
@@ -11,7 +25,7 @@ We're at an inflection point. AI systems are being deployed at unprecedented sca
 
 **What if we could see AI interactions the way Kaspersky shows cyber threats in real-time?**
 
-NerdCabalMCP is the **multimodal X-ray platform** for AI systems — transforming black-box AI into transparent, interpretable, and safe technology. We're building the marketplace that connects researchers, policymakers, enterprises, and the public through real-time mechanistic interpretability.
+LATTICE is building the marketplace that connects researchers, policymakers, enterprises, and the public through real-time mechanistic interpretability.
 
 ---
 
@@ -19,7 +33,7 @@ NerdCabalMCP is the **multimodal X-ray platform** for AI systems — transformin
 
 ### **From Incident Database to Prevention Platform**
 
-Think of NerdCabalMCP as:
+Think of LATTICE as:
 - **AI Incident Database** (AIID) meets **Kaspersky Cyber Threat Map** — but preventative, not just archival
 - **Coursera** meets **Duolingo** — for training humans and AI systems on safety through mechanistic interpretability
 - **MITRE ATT&CK** — but for AI vulnerabilities, with real-time detection and community-driven threat intelligence
@@ -42,7 +56,7 @@ When sycophancy rates spike → AI psychosis follows. When users report multilin
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    NerdCabalMCP Platform                     │
+│                    LATTICE Platform                     │
 │                                                               │
 │  ┌────────────────┐  ┌─────────────────┐  ┌──────────────┐  │
 │  │  Data Ingestion │  │ Interpretability│  │ Threat Intel │  │
@@ -257,7 +271,7 @@ I'm at that -1 to 0 stage — leaving [job/school] to build this full-time. The 
 
 This isn't just a product. It's infrastructure for AI safety at scale.
 
-When the next AI incident happens — and it will — NerdCabalMCP will be the platform that:
+When the next AI incident happens — and it will — LATTICE will be the platform that:
 - Detected it first
 - Contained it fastest
 - Helped everyone learn from it
@@ -270,7 +284,7 @@ That's not just a business. That's a responsibility.
 
 ## 📞 **Get In Touch**
 
-- **Live Demo:** [GitHub - NerdCabalMCP](https://github.com/Tuesdaythe13th/NerdCabalMCP)
+- **Live Demo:** [GitHub - LATTICE](https://github.com/Tuesdaythe13th/LATTICE)
 - **Documentation:** Full MCP integration guides, tutorials
 - **A2UI Prototype:** [Link to deployed demo]
 - **Email:** [your-email]
@@ -280,7 +294,7 @@ That's not just a business. That's a responsibility.
 
 ### 🏆 **Application Highlights**
 
-**What makes NerdCabalMCP different?**
+**What makes LATTICE different?**
 1. **Real-Time:** Redis-powered live threat intelligence (not post-mortem analysis)
 2. **Multimodal:** X-ray for text, images, code, audio (full A2UI rendering)
 3. **Marketplace:** Platform, not just a tool (network effects + recurring revenue)
@@ -510,7 +524,19 @@ Result: Interactive dashboard appears in <2 seconds, live-updating as new incide
 
 ---
 
-**This is the future of AI safety. This is NerdCabalMCP.**
+**This is the future of AI safety. This is LATTICE (L4TT1C3).**
 
 *Submitted for AI Explorer Program - Beta Fund*
+
 *Ready to go from possibility to conviction.*
+
+---
+
+## 📁 Repository & Platform
+
+**LATTICE** is built on the **NerdCabalMCP** infrastructure:
+- **GitHub:** https://github.com/Tuesdaythe13th/NerdCabalMCP
+- **Competition Folder:** `/competitions/ai-explorer/`
+- **Platform Documentation:** `/docs/`
+
+LATTICE leverages the 14 specialized agents from NerdCabalMCP to provide real-time AI safety coordination.

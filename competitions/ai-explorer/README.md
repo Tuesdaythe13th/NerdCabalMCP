@@ -3,8 +3,10 @@
 
 ## 🎯 Submission Overview
 
-**Project:** NerdCabalMCP - The X-Ray for AI Interactions
+**Project:** LATTICE (L4TT1C3) - The X-Ray for AI Interactions
+**Full Name:** Live AI Threat Tracking & Interpretability Coordination Engine
 **Category:** AI Safety & Interpretability Marketplace
+**Platform:** Built on NerdCabalMCP Infrastructure
 **Applicant:** [Your Name]
 **Date:** January 2026
 

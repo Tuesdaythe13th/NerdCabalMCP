@@ -1,4 +1,6 @@
-# 🏆 AI Explorer Hackathon - Quick Link
+# 🏆 LATTICE (L4TT1C3) - AI Explorer Hackathon
+
+**Live AI Threat Tracking & Interpretability Coordination Engine**
 
 ## Direct Link to Competition Folder
 
@@ -11,8 +13,9 @@
 ```
 competitions/ai-explorer/
 ├── README.md                           # 👈 Start here - Competition overview
-├── AI_EXPLORER_SUBMISSION.md           # Full submission document
-└── AI_Explorer_Hackathon_Demo.ipynb    # Interactive demo notebook
+├── AI_EXPLORER_SUBMISSION.md           # Full submission document (LATTICE)
+├── AI_Explorer_Hackathon_Demo.ipynb    # Interactive demo notebook
+└── QUICK_LINK.md                       # This file
 ```
 
 ---
@@ -26,11 +29,12 @@ https://github.com/Tuesdaythe13th/NerdCabalMCP/blob/main/competitions/ai-explore
 ```
 
 **Contains:**
-- Vision & problem statement
+- **LATTICE** vision & problem statement
 - Business model ($180K Year 1 projection)
 - Technical architecture (Redis MCP + A2UI)
 - Market opportunity
 - Go-to-market strategy
+- Built on NerdCabalMCP platform infrastructure
 
 ### 2️⃣ Run the Demo
 ```bash
