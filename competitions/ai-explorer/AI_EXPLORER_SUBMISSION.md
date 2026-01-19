@@ -7,8 +7,8 @@
 
 **by TUESDAY - AI Explorer Submission**
 
-- LINKS: linktr.ee/artifexlabs 
-- LINKEDIN: linkedin.com/222tuesday
+- LINKS: https://www.linktr.ee/artifexlabs 
+- LINKEDIN: https://www.linkedin.com/in/222tuesday
 - SCHOLAR: https://scholar.google.com/citations?hl=en&user=z71m_nIAAAAJ&view_op=list_works&authuser=1
 
 ---
