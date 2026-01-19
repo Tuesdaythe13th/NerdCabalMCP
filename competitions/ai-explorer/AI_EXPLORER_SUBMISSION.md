@@ -960,9 +960,8 @@ LATTICE is the **only AI safety platform** that combines:
 
 **Email:** [your-email@domain.com]
 **GitHub:** [@Tuesdaythe13th](https://github.com/Tuesdaythe13th)
-**Website:** [lattice.ai or artifex.fun]
-**LinkedIn:** [your-linkedin]
-**Twitter/X:** [your-twitter]
+**Website:** linktr.ee/artifexlabs 
+
 
 **Schedule Interview:** [Calendly link or "Available 48 hours from submission"]
 
@@ -1022,7 +1021,7 @@ Tech Stack:     Redis MCP, A2UI, TypeScript, Python, Jupyter
 Revenue Model:  SaaS + Marketplace + API + Compliance
 Year 1 Target:  $180K revenue
 TAM:            $15B+ (AI safety + cybersecurity intersection)
-Founder:        [Your Name]
+Founder:        Tuesday
 Status:         Ready for full-time commitment
 Ask:            $25K Explorer → $100K Equity Track
 ```
