@@ -1,5 +1,5 @@
 # LATTICE (L4TT1C3)
-## Live AI Threat Tracking & Interpretability Coordination Engine
+## Live Computational Threat Tracking & Interpretability Coordination Engine
 
 **The X-Ray for AI Interactions**
 
