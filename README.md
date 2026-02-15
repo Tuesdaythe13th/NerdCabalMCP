@@ -28,6 +28,7 @@ A GIFT FROM TUESDAY'S LITTLE SHOP OF EXISTENTIAL HORRORS
 - [Configuration](#configuration)
 - [Running the MCP Server](#running-the-mcp-server)
 - [Using Agents](#using-agents)
+- [**Testing Guide** 🧪](TESTING.md) - Complete testing instructions
 - [Architecture](#architecture)
 - [API Reference](#api-reference)
 - [Advanced Usage](#advanced-usage)
@@ -39,41 +40,118 @@ A GIFT FROM TUESDAY'S LITTLE SHOP OF EXISTENTIAL HORRORS
 
 ```
 NerdCabalMCP/
-├── competitions/          # Competition submissions
-│   └── ai-explorer/       # 🏆 AI Explorer hackathon (Beta Fund)
-│       ├── README.md
-│       ├── AI_EXPLORER_SUBMISSION.md
-│       └── AI_Explorer_Hackathon_Demo.ipynb
-├── docs/                  # 📖 Documentation
-│   ├── README.md
-│   ├── QUICK_START.md
-│   ├── MCP_SERVER_GUIDE.md
+├── .claude/                           # Claude Code configuration
+│   ├── agents/                        # Custom Claude agents
+│   │   ├── tutorial-scanner.md        # Tutorial discovery agent
+│   │   ├── tutorial-executor.md       # Tutorial execution agent
+│   │   ├── tutorial-tool-extractor-implementor.md
+│   │   ├── test-verifier-improver.md  # Testing agent
+│   │   ├── environment-python-manager.md
+│   │   ├── benchmark-extractor.md     # Benchmark agents
+│   │   ├── benchmark-judge.md
+│   │   ├── benchmark-reviewer.md
+│   │   └── benchmark-solver.md
+│   └── settings.json                  # Claude settings
+├── competitions/                      # Competition submissions
+│   └── ai-explorer/                   # 🏆 AI Explorer hackathon
+├── docs/                              # 📖 All documentation
+│   ├── README.md                      # Docs index
+│   ├── QUICK_START.md                 # Quick start guide
+│   ├── MCP_SERVER_GUIDE.md            # MCP server details
 │   ├── ARTIFEX_NERD_SWARM_ARCHITECTURE.md
-│   └── ... (see docs/README.md for full list)
-├── notebooks/             # 📓 Jupyter notebooks
+│   ├── API_KEY_MANAGEMENT.md
+│   ├── CORRECTED_DOCUMENTATION.md
+│   ├── README_ENTERPRISE_IP.md
+│   ├── ENHANCEMENTS_REPORT.md         # Feature enhancements
+│   ├── HACKATHON_SUBMISSION.md        # Submission details
+│   ├── IMPLEMENTATION_ROADMAP.md      # Development roadmap
+│   └── SUBMISSION_COMPLETE.md
+├── hackathon-submission/              # Hackathon materials
+│   ├── assets/                        # Presentation assets
+│   │   ├── slide-deck.md
+│   │   ├── video-script.md
+│   │   ├── cover-image-specs.md
+│   │   ├── SLIDE_PRESENTATION.md
+│   │   ├── VIDEO_PRESENTATION_SCRIPT.md
+│   │   └── COVER_IMAGE_DESIGN.md
+│   ├── demo/                          # Demo application
+│   │   ├── app/
+│   │   └── styles/
+│   ├── docs/                          # Submission docs
+│   └── INDEX.md                       # Submission index
+├── mcp-server/                        # 🔧 MCP server (TypeScript)
+│   ├── src/                           # Source code
+│   │   ├── index.ts                   # Main server entry
+│   │   ├── administrator-agent.ts     # Org design agent
+│   │   ├── archival-system.ts         # IP evidence storage
+│   │   ├── budget-agent.ts            # Financial planning
+│   │   ├── ciso-agent.ts              # Security (STRIDE)
+│   │   ├── compliance-engine.ts       # GDPR/DMCA compliance
+│   │   ├── comptroller-agent.ts       # Operations (Iron Triangle)
+│   │   ├── creative-director.ts       # Design systems
+│   │   ├── dataset-builder.ts         # ML dataset creation
+│   │   ├── experimental-designer.ts   # Research methodology
+│   │   ├── forensic-analyst.ts        # Neural forensics (DSMMD)
+│   │   ├── ip-analytics.ts            # IP pattern detection
+│   │   ├── ip-protection-suite.ts     # IP suite orchestrator
+│   │   ├── mlflow-agent.ts            # MLflow queries
+│   │   ├── orchestrator.ts            # Multi-agent workflows
+│   │   ├── rubric-architect.ts        # LLM evaluation rubrics
+│   │   ├── visual-inspector.ts        # FiftyOne integration
+│   │   ├── utils.ts                   # Shared utilities
+│   │   └── *-types.ts                 # TypeScript type definitions
+│   ├── examples/                      # Usage examples
+│   ├── package.json                   # Dependencies
+│   ├── tsconfig.json                  # TypeScript config
+│   ├── mcp-config.json                # MCP configuration
+│   └── README.md                      # Server docs
+├── notebooks/                         # 📓 Jupyter notebooks
 │   ├── README.md
 │   └── MATS_Neural_Forensics_Demo.ipynb
-├── mcp-server/            # 🔧 MCP server implementation
-│   ├── src/
-│   │   ├── index.ts       # Main server
-│   │   └── agents/        # 14 specialized agents
-│   └── package.json
-├── scripts/               # 🛠️ Utility scripts
+├── PROOF_TO_PAY-AGENTIC_COMMERCE/     # Commerce project
+│   ├── assets/
+│   ├── demo/
+│   └── docs/                          # Commerce documentation
+│       ├── AGENTIC_COMMERCE_README.md
+│       ├── ARC_COMMERCE_ARCHITECTURE.md
+│       └── QUICK_START_ARC_COMMERCE.md
+├── prompts/                           # 💬 Prompt templates
+│   ├── step1_prompt.md
+│   ├── step2_prompt.md
+│   ├── step3_prompt.md
+│   ├── step4_prompt.md
+│   └── step5_prompt.md
+├── scripts/                           # 🛠️ Utility scripts
 │   ├── Paper2Agent.sh
 │   └── launch_remote_mcp.sh
-├── tutorials/             # 🎓 Tutorial content
+├── templates/                         # 📋 Project templates
+│   ├── AlphaPOP/
+│   ├── src/
+│   └── test/
+├── tools/                             # 🔨 Build tools
+│   ├── benchmark_assessor.py
+│   ├── benchmark_extractor.py
+│   ├── benchmark_reviewer.py
+│   ├── extract_notebook_images.py
+│   └── preprocess_notebook.py
+├── tutorials/                         # 🎓 Tutorial content
 │   └── siggraph-2026-sovereign-studio/
-├── agents/                # 🤖 Agent definitions
-├── prompts/               # 💬 Prompt templates
-├── templates/             # 📋 Project templates
-└── README.md              # 👈 You are here
+├── web_ui/                            # 🌐 Web interface
+│   └── templates/
+├── LICENSE                            # MIT License
+├── README.md                          # 👈 You are here
+├── TESTING.md                         # 🧪 Comprehensive testing guide
+└── .gitignore                         # Git ignore rules
 ```
 
 ### Quick Links
-- **🏆 Hackathon Submission:** [competitions/ai-explorer/](./competitions/ai-explorer/)
+- **🧪 Testing Guide:** [TESTING.md](./TESTING.md) - **START HERE for testing!**
+- **🏆 Hackathon Submission:** [hackathon-submission/](./hackathon-submission/)
 - **📖 Full Documentation:** [docs/](./docs/)
 - **📓 Demo Notebooks:** [notebooks/](./notebooks/)
 - **🚀 Quick Start Guide:** [docs/QUICK_START.md](./docs/QUICK_START.md)
+- **🔧 MCP Server Guide:** [docs/MCP_SERVER_GUIDE.md](docs/MCP_SERVER_GUIDE.md)
+- **💻 Claude Code Guide:** [CLAUDE.MD](./CLAUDE.MD)
 
 ---
 
