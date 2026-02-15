@@ -80,7 +80,7 @@ export const IP_ANALYTICS_TOOL_SCHEMA = {
   name: 'ip_analytics',
   description: 'Enterprise IP analytics: pattern detection, risk heatmaps, portfolio valuation, competitive scanning',
   inputSchema: {
-    type: 'object',
+    type: 'object' as const,
     properties: {
       action: {
         type: 'string',
@@ -108,7 +108,7 @@ export const COMPLIANCE_ENGINE_TOOL_SCHEMA = {
   name: 'compliance_check',
   description: 'Validate actions against GDPR, DMCA, EU Copyright Directive, AI Act. Advisory only - not legal advice.',
   inputSchema: {
-    type: 'object',
+    type: 'object' as const,
     properties: {
       action: {
         type: 'string',
@@ -140,7 +140,7 @@ export const ARCHIVAL_SYSTEM_TOOL_SCHEMA = {
   name: 'archival_system',
   description: 'Cryptographically secure evidence storage with tamper-proof chain for legal admissibility',
   inputSchema: {
-    type: 'object',
+    type: 'object' as const,
     properties: {
       action: {
         type: 'string',
