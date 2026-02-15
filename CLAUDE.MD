@@ -1,10 +1,292 @@
-# Paper2Agent - AI Agent Generation System
+# Using NerdCabalMCP with Claude Code
 
 ## Overview
 
-Paper2Agent is a multi-agent AI system that automatically transforms research papers into interactive AI agents with minimal human input. The system extracts tools from research paper codebases and creates Model Context Protocol (MCP) servers that can be used with Claude Code and other AI coding assistants.
+This guide explains how to use the **NerdCabalMCP** server with **Claude Code** and **Claude Desktop**. NerdCabalMCP provides 17 specialized AI agents that assist with research, security, design, finance, operations, and enterprise IP protection.
 
-## Project Architecture
+This MCP server also includes **Paper2Agent**, a multi-agent AI system that automatically transforms research papers into interactive AI agents with minimal human input.
+
+## 🚀 Quick Start with Claude Code
+
+### Step 1: Install and Build the MCP Server
+
+```bash
+# Clone the repository
+git clone https://github.com/Tuesdaythe13th/NerdCabalMCP.git
+cd NerdCabalMCP/mcp-server
+
+# Install dependencies
+npm install
+
+# Build the TypeScript code
+npm run build
+```
+
+### Step 2: Configure Claude Desktop
+
+Add the following to your Claude Desktop configuration file:
+
+**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+**Linux:** `~/.config/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "nerdcabal": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/NerdCabalMCP/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}
+```
+
+**Important:** Replace `/absolute/path/to/` with the actual absolute path on your system.
+
+### Step 3: Restart Claude Desktop
+
+Completely quit and reopen Claude Desktop for the changes to take effect.
+
+### Step 4: Verify Installation
+
+In Claude Desktop:
+1. Start a new conversation
+2. Type `@` to see available tools
+3. Look for `nerdcabal` tools
+
+You should see tools like:
+- `llm-rubric-architect`
+- `experimental-designer`
+- `budget-agent`
+- `creative-director`
+- And 13+ more!
+
+---
+
+## 🤖 The 17 Specialized Agents
+
+### Enterprise IP Protection Suite (3 agents)
+
+#### 1. IP Analytics Engine
+**Tool:** `ip_analytics`
+
+Analyzes intellectual property patterns, portfolio valuation, and competitive scanning.
+
+**Example usage:**
+```
+@nerdcabal Use ip_analytics to analyze copyright infringement patterns
+for the last 90 days in portfolio PORT-001.
+```
+
+#### 2. Compliance Engine
+**Tool:** `compliance_check`
+
+Validates GDPR, DMCA, EU Copyright Directive, and AI Act compliance.
+
+**Example usage:**
+```
+@nerdcabal Use compliance_check to validate GDPR compliance for a system
+that processes personal data with consent.
+```
+
+#### 3. Archival System
+**Tool:** `archival_system`
+
+Stores IP infringement evidence with cryptographic integrity using SHA-256 chain hashing.
+
+**Example usage:**
+```
+@nerdcabal Use archival_system to store evidence of copyright infringement
+from https://example.com/infringement.jpg for case CASE-2026-001.
+```
+
+---
+
+### Research & Evaluation Agents (3 agents)
+
+#### 4. LLM Rubric Architect
+**Tool:** `llm-rubric-architect`
+
+Creates comprehensive evaluation rubrics for AI systems.
+
+**Example usage:**
+```
+@nerdcabal Use llm-rubric-architect to create a rubric for evaluating
+chatbot responses. Include accuracy, helpfulness, safety, and tone on a 1-5 scale.
+```
+
+#### 5. Experimental Designer
+**Tool:** `experimental-designer`
+
+Designs controlled experiments with proper methodology and power analysis.
+
+**Example usage:**
+```
+@nerdcabal Use experimental-designer to design an A/B test.
+Hypothesis: Chain-of-thought prompting improves accuracy on math problems.
+Sample size: 1000. Metric: accuracy.
+```
+
+#### 6. Forensic Analyst
+**Tool:** `forensic-analyst`
+
+Detects hallucinations and errors in LLM outputs using DSMMD taxonomy.
+
+**Example usage:**
+```
+@nerdcabal Use forensic-analyst to analyze this transcript for hallucinations:
+[paste transcript here]
+```
+
+---
+
+### Financial & Operations Agents (2 agents)
+
+#### 7. Budget Agent
+**Tool:** `budget-agent`
+
+Creates budgets for grants, investor pitches, and project planning.
+
+**Example usage:**
+```
+@nerdcabal Use budget-agent to create an NSF grant budget for an AI research project.
+Funding target: $500,000. Timeline: 18 months.
+```
+
+#### 8. Comptroller Agent
+**Tool:** `comptroller-agent`
+
+Analyzes the Iron Triangle (Speed ⟷ Cost ⟷ Quality) trade-offs.
+
+**Example usage:**
+```
+@nerdcabal Use comptroller-agent to analyze trade-offs for building a new feature
+in 2 weeks with $10,000 budget and production-quality requirements.
+```
+
+---
+
+### Governance & Security Agents (2 agents)
+
+#### 9. Administrator Agent
+**Tool:** `administrator-agent`
+
+Designs organizational structures, SOPs, and team configurations.
+
+**Example usage:**
+```
+@nerdcabal Use administrator-agent to design an org chart for a distributed AI team
+with 15 people across US East, US West, EU, and Asia timezones.
+```
+
+#### 10. CISO Agent
+**Tool:** `ciso-agent`
+
+Performs STRIDE threat modeling and security audits.
+
+**Example usage:**
+```
+@nerdcabal Use ciso-agent to perform a STRIDE threat model for an LLM API
+with components: API gateway, model inference, user database.
+```
+
+---
+
+### ML Operations Agents (3 agents)
+
+#### 11. MLflow Agent
+**Tool:** `mlflow-agent`
+
+Generates MLflow queries for experiment tracking.
+
+**Example usage:**
+```
+@nerdcabal Use mlflow-agent to create a query that finds the top 10 model runs
+with highest accuracy from the last 30 days.
+```
+
+#### 12. Dataset Builder
+**Tool:** `dataset-builder`
+
+Creates ML training datasets in SFT, DPO, or RLHF formats.
+
+**Example usage:**
+```
+@nerdcabal Use dataset-builder to create a supervised fine-tuning dataset
+for teaching Python code generation. Include 5 examples in HuggingFace format.
+```
+
+#### 13. Visual Inspector
+**Tool:** `visual-inspector`
+
+Generates FiftyOne scripts for dataset visualization and quality analysis.
+
+**Example usage:**
+```
+@nerdcabal Use visual-inspector to create a FiftyOne visualization script
+for CIFAR-10 to find mislabeled images.
+```
+
+---
+
+### Design Agent (1 agent)
+
+#### 14. Creative Director
+**Tool:** `creative-director`
+
+Creates design systems, color palettes, and UI/UX specifications.
+
+**Example usage:**
+```
+@nerdcabal Use creative-director to create a cyberpunk brutalist design system
+with colors: black, white, red. Components: buttons, cards, navigation. Output: CSS.
+```
+
+---
+
+### Meta-Agent (1 agent)
+
+#### 15. Orchestrator
+**Tool:** `orchestrator`
+
+Coordinates multi-agent workflows using ADK patterns (Sequential, Parallel, Loop, Coordinator).
+
+**Example usage:**
+```
+@nerdcabal Use orchestrator to create a sequential workflow:
+1. experimental-designer creates an experiment
+2. budget-agent creates a budget
+3. administrator-agent designs the team
+```
+
+---
+
+### Paper2Agent Infrastructure (2 agents)
+
+#### 16-17. Paper2Agent System
+
+The Paper2Agent system converts research papers into interactive MCP tools.
+
+**Custom Claude Agents** (in `.claude/agents/`):
+- `tutorial-scanner` - Identifies tutorial materials in codebases
+- `tutorial-executor` - Executes notebooks to generate outputs
+- `tutorial-tool-extractor-implementor` - Extracts reusable functions
+- `test-verifier-improver` - Creates and validates tests
+- `environment-python-manager` - Manages Python environments
+- `benchmark-extractor`, `benchmark-judge`, `benchmark-reviewer`, `benchmark-solver` - Benchmark processing
+
+---
+
+## 📖 Paper2Agent Architecture
+
+Paper2Agent is integrated into NerdCabalMCP and uses specialized agents for converting research papers to tools.
 
 ### Core Components
 
@@ -349,9 +631,162 @@ claude
 }
 ```
 
-## Resources
+---
 
-- **Repository**: https://github.com/jmiao24/Paper2Agent
-- **Benchmarking**: https://github.com/joed3/Paper2AgentBench
+## 💡 How to Use Agents in Claude Code
+
+### Basic Usage Pattern
+
+Every agent follows this simple pattern:
+
+```
+@nerdcabal Use [agent-name] to [describe task]
+```
+
+### Multi-Agent Workflows
+
+You can chain multiple agents together:
+
+```
+@nerdcabal Let's plan a complete research project:
+
+1. Use experimental-designer to design an A/B test for prompt engineering
+2. Use budget-agent to create a 6-month budget for $200k
+3. Use administrator-agent to design a team of 5 people
+4. Use ciso-agent to identify security risks
+```
+
+Claude will execute each agent sequentially, passing context between them.
+
+### Checking Available Tools
+
+In Claude Code or Claude Desktop:
+
+```
+Type @ to see all available tools
+Look for tools starting with the nerdcabal prefix
+```
+
+Or use the MCP command:
+
+```
+\mcp
+```
+
+---
+
+## 🧪 Testing Your Setup
+
+See the comprehensive [TESTING.md](./TESTING.md) guide for:
+- Quick verification tests
+- Individual agent test cases
+- Integration testing scenarios
+- Troubleshooting common issues
+
+### Quick Verification Test
+
+Try this in Claude Desktop:
+
+```
+@nerdcabal Use llm-rubric-architect to create a simple rubric for
+evaluating AI assistants on helpfulness and accuracy. Use a 1-3 scale.
+```
+
+If you get a well-formatted rubric back, your MCP is working perfectly!
+
+---
+
+## 🔧 Troubleshooting
+
+### "Tools not appearing in Claude Desktop"
+
+1. **Check configuration file path:**
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+   - Linux: `~/.config/Claude/claude_desktop_config.json`
+
+2. **Verify absolute path:**
+   ```json
+   "args": ["/Users/yourname/NerdCabalMCP/mcp-server/dist/index.js"]
+   ```
+   NOT:
+   ```json
+   "args": ["~/NerdCabalMCP/mcp-server/dist/index.js"]  // ❌ Won't work
+   ```
+
+3. **Completely restart Claude Desktop:**
+   - Quit the application entirely (not just close window)
+   - Reopen Claude Desktop
+
+4. **Check logs:**
+   ```bash
+   # macOS
+   tail -f ~/Library/Logs/Claude/mcp*.log
+
+   # Linux
+   tail -f ~/.config/Claude/logs/mcp*.log
+   ```
+
+### "Server not starting"
+
+1. **Rebuild the server:**
+   ```bash
+   cd mcp-server
+   npm run build
+   ```
+
+2. **Test standalone:**
+   ```bash
+   node dist/index.js
+   ```
+   Should output: `MCP server running on stdio`
+
+3. **Check Node.js version:**
+   ```bash
+   node --version  # Should be v18.0.0 or higher
+   ```
+
+### "Agent returns error"
+
+1. Verify you're using correct agent name (see list above)
+2. Check input format matches the agent's schema
+3. Enable debug logging in config:
+   ```json
+   "env": {
+     "LOG_LEVEL": "debug"
+   }
+   ```
+
+---
+
+## 📚 Additional Resources
+
+### NerdCabalMCP Documentation
+- **Main README:** [README.md](./README.md) - Complete feature documentation
+- **Testing Guide:** [TESTING.md](./TESTING.md) - Comprehensive testing instructions
+- **MCP Server Guide:** [docs/MCP_SERVER_GUIDE.md](docs/MCP_SERVER_GUIDE.md)
+- **Quick Start:** [docs/QUICK_START.md](docs/QUICK_START.md)
+
+### External Resources
+- **Paper2Agent Repository**: https://github.com/jmiao24/Paper2Agent
+- **Paper2Agent Benchmarking**: https://github.com/joed3/Paper2AgentBench
 - **Claude Code**: https://www.anthropic.com/claude-code
 - **FastMCP**: https://github.com/jlowin/fastmcp
+- **MCP Protocol**: https://modelcontextprotocol.io
+- **Anthropic MCP Docs**: https://docs.anthropic.com/claude/docs/mcp
+
+---
+
+## 🎯 Next Steps
+
+1. **Test individual agents:** Use [TESTING.md](./TESTING.md) to verify each agent works
+2. **Try multi-agent workflows:** Combine agents for complex tasks
+3. **Explore Paper2Agent:** Convert research papers to MCP tools
+4. **Read the docs:** Check [docs/](./docs/) for detailed guides
+5. **Join discussions:** https://github.com/Tuesdaythe13th/NerdCabalMCP/discussions
+
+---
+
+**Built with ❤️ by TUESDAY and the OG NerdCabal**
+
+*WE RESPECT THE RULES OF THE SEA.*
