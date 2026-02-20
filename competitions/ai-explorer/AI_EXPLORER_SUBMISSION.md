@@ -761,10 +761,28 @@ Total end-to-end latency: <1 second from specimen → alert
 ## 📁 Repository & Platform
 
 **LATTICE** is built on the **NerdCabalMCP** infrastructure:
-- **GitHub:** https://github.com/Tuesdaythe13th/NerdCabalMCP
-- **Competition Folder:** `/competitions/ai-explorer/`
-- **Platform Documentation:** `/docs/`
+- **LATTICE Repository:** https://github.com/Tuesdaythe13th/lattice
+- **Platform Infrastructure:** https://github.com/Tuesdaythe13th/NerdCabalMCP
+- **Competition Folder:** https://github.com/Tuesdaythe13th/NerdCabalMCP/tree/main/competitions/ai-explorer
 - **Live Demo:** Interactive Jupyter notebook with full implementation
+- **Documentation:** Coming soon to docs.lattice.ai (Mintlify)
+
+### Repository Structure
+
+**lattice** (Product Repository) - https://github.com/Tuesdaythe13th/lattice
+- Production-ready LATTICE application
+- Redis MCP server implementation
+- A2UI dashboard
+- Python/TypeScript SDKs
+- API implementation
+- Developer documentation
+
+**NerdCabalMCP** (Platform Infrastructure) - https://github.com/Tuesdaythe13th/NerdCabalMCP
+- 14 specialized AI agents
+- MCP server foundation
+- Agent orchestration
+- Research & development
+- AI Explorer competition materials
 
 LATTICE leverages the 14 specialized agents from NerdCabalMCP to provide real-time AI safety coordination.
 
@@ -969,15 +987,29 @@ LATTICE is the **only AI safety platform** that combines:
 
 **Try the Demo:**
 ```bash
+# Competition submission materials
 git clone https://github.com/Tuesdaythe13th/NerdCabalMCP.git
 cd NerdCabalMCP/competitions/ai-explorer
 jupyter notebook AI_Explorer_Hackathon_Demo.ipynb
 ```
 
-**Explore the Platform:**
-- View code: `/mcp-server/` (TypeScript MCP implementation)
-- Read docs: `/docs/MCP_SERVER_GUIDE.md`
-- See architecture: `/docs/ARTIFEX_NERD_SWARM_ARCHITECTURE.md`
+**Explore the LATTICE Product:**
+```bash
+# Production LATTICE application
+git clone https://github.com/Tuesdaythe13th/lattice.git
+cd lattice
+# See README.md for setup instructions
+```
+
+**Explore the Platform Infrastructure:**
+- **LATTICE Repo:** https://github.com/Tuesdaythe13th/lattice
+  - View production code
+  - Redis MCP implementation
+  - API and SDK code
+- **NerdCabalMCP Repo:** https://github.com/Tuesdaythe13th/NerdCabalMCP
+  - View MCP server: `/mcp-server/` (TypeScript)
+  - Read platform docs: `/docs/MCP_SERVER_GUIDE.md`
+  - See agent architecture: `/docs/ARTIFEX_NERD_SWARM_ARCHITECTURE.md`
 
 **Ask Me Anything:**
 - I'm responsive on email and available for calls
@@ -1026,5 +1058,8 @@ Status:         Ready for full-time commitment
 Ask:            $25K Explorer → $100K Equity Track
 ```
 
-**Link:** https://github.com/Tuesdaythe13th/NerdCabalMCP/tree/main/competitions/ai-explorer
+**Links:**
+- **LATTICE Product:** https://github.com/Tuesdaythe13th/lattice
+- **Competition Submission:** https://github.com/Tuesdaythe13th/NerdCabalMCP/tree/main/competitions/ai-explorer
+- **Platform Infrastructure:** https://github.com/Tuesdaythe13th/NerdCabalMCP
 

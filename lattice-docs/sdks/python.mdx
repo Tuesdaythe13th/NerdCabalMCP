@@ -1,0 +1,795 @@
+---
+title: 'Python SDK'
+description: 'Official Python SDK for LATTICE API'
+---
+
+# Python SDK
+
+The official LATTICE Python SDK provides a convenient interface to the LATTICE API from Python 3.8+.
+
+## Installation
+
+<CodeGroup>
+
+```bash pip
+pip install lattice-ai
+```
+
+```bash poetry
+poetry add lattice-ai
+```
+
+```bash conda
+conda install -c conda-forge lattice-ai
+```
+
+</CodeGroup>
+
+## Quick Start
+
+```python
+from lattice import LATTICE
+
+# Initialize the client
+client = LATTICE(api_key="sk_lattice_your_key_here")
+
+# Ingest a specimen
+response = client.specimens.ingest(
+    model="gpt-4",
+    conversation=[
+        {"role": "user", "content": "What's 2+2?"},
+        {"role": "assistant", "content": "4"}
+    ]
+)
+
+print(f"Specimen ID: {response.specimen_id}")
+print(f"Anomaly Score: {response.scores.overall_anomaly}")
+```
+
+## Authentication
+
+The SDK requires an API key from [dashboard.lattice.ai](https://dashboard.lattice.ai).
+
+### Environment Variable (Recommended)
+
+```bash
+export LATTICE_API_KEY=sk_lattice_your_key_here
+```
+
+```python
+from lattice import LATTICE
+
+# Automatically uses LATTICE_API_KEY from environment
+client = LATTICE()
+```
+
+### Direct Initialization
+
+```python
+from lattice import LATTICE
+
+client = LATTICE(api_key="sk_lattice_your_key_here")
+```
+
+<Warning>
+  Never hardcode API keys in your source code. Use environment variables or a secrets manager.
+</Warning>
+
+## Core Concepts
+
+### Specimens
+
+A **specimen** is any AI interaction you want to analyze:
+
+```python
+# Simple conversation
+specimen = client.specimens.ingest(
+    model="gpt-4",
+    conversation=[
+        {"role": "user", "content": "Hello!"},
+        {"role": "assistant", "content": "Hi! How can I help?"}
+    ]
+)
+
+# With metadata
+specimen = client.specimens.ingest(
+    model="claude-3-opus",
+    conversation=[...],
+    metadata={
+        "user_id": "user_123",
+        "session_id": "sess_456",
+        "timestamp": "2026-01-19T12:00:00Z",
+        "tags": ["production", "high-priority"]
+    }
+)
+```
+
+### Anomaly Scores
+
+Each specimen receives anomaly scores (0-1 scale):
+
+```python
+specimen = client.specimens.retrieve("spec_abc123")
+
+print(f"Sycophancy: {specimen.scores.sycophancy}")
+print(f"Prompt Infiltration: {specimen.scores.prompt_infiltration}")
+print(f"Multilingual Anomaly: {specimen.scores.multilingual_anomaly}")
+print(f"Overall: {specimen.scores.overall_anomaly}")
+
+if specimen.flagged:
+    print(f"⚠️ Flagged for: {specimen.flag_reasons}")
+```
+
+## API Reference
+
+### Client
+
+#### `LATTICE(api_key=None, base_url=None, timeout=30)`
+
+Initialize the LATTICE client.
+
+**Parameters:**
+- `api_key` (str, optional): API key. Defaults to `LATTICE_API_KEY` environment variable.
+- `base_url` (str, optional): API base URL. Defaults to `https://api.lattice.ai/v1`.
+- `timeout` (int, optional): Request timeout in seconds. Default: 30.
+
+**Returns:** LATTICE client instance
+
+**Example:**
+```python
+client = LATTICE(
+    api_key="sk_lattice_...",
+    timeout=60  # 60 second timeout
+)
+```
+
+### Specimens
+
+#### `client.specimens.ingest(model, conversation, metadata=None)`
+
+Ingest a new specimen for analysis.
+
+**Parameters:**
+- `model` (str, required): AI model name (e.g., "gpt-4", "claude-3-opus")
+- `conversation` (list, required): Array of message objects with `role` and `content`
+- `metadata` (dict, optional): Additional metadata
+
+**Returns:** Specimen object
+
+**Example:**
+```python
+specimen = client.specimens.ingest(
+    model="gpt-4",
+    conversation=[
+        {"role": "user", "content": "What's the weather?"},
+        {"role": "assistant", "content": "I can't access real-time weather."}
+    ],
+    metadata={"user_id": "user_123"}
+)
+```
+
+#### `client.specimens.retrieve(specimen_id)`
+
+Get details of a specific specimen.
+
+**Parameters:**
+- `specimen_id` (str, required): Specimen ID
+
+**Returns:** Specimen object
+
+**Example:**
+```python
+specimen = client.specimens.retrieve("spec_abc123")
+print(specimen.conversation)
+```
+
+#### `client.specimens.list(limit=20, offset=0, **filters)`
+
+List specimens with optional filters.
+
+**Parameters:**
+- `limit` (int, optional): Results per page (max 100). Default: 20.
+- `offset` (int, optional): Pagination offset. Default: 0.
+- `model` (str, optional): Filter by model
+- `flagged` (bool, optional): Filter by flagged status
+- `min_anomaly_score` (float, optional): Minimum overall anomaly score
+
+**Returns:** List of Specimen objects
+
+**Example:**
+```python
+# Get all flagged GPT-4 specimens
+specimens = client.specimens.list(
+    model="gpt-4",
+    flagged=True,
+    limit=50
+)
+
+for spec in specimens:
+    print(f"{spec.specimen_id}: {spec.scores.overall_anomaly}")
+```
+
+#### `client.specimens.delete(specimen_id)`
+
+Delete a specimen.
+
+**Parameters:**
+- `specimen_id` (str, required): Specimen ID
+
+**Returns:** None
+
+**Example:**
+```python
+client.specimens.delete("spec_abc123")
+```
+
+#### `client.specimens.batch_ingest(specimens, batch_size=1000)`
+
+Ingest multiple specimens in batches.
+
+**Parameters:**
+- `specimens` (list, required): List of specimen dicts (max 10,000)
+- `batch_size` (int, optional): Specimens per batch. Default: 1000.
+
+**Returns:** BatchResult object
+
+**Example:**
+```python
+specimens = [
+    {
+        "model": "gpt-4",
+        "conversation": [...],
+        "metadata": {...}
+    },
+    # ... up to 10,000 specimens
+]
+
+result = client.specimens.batch_ingest(specimens)
+print(f"Ingested: {result.ingested}")
+print(f"Failed: {result.failed}")
+```
+
+### Incidents
+
+#### `client.incidents.list(limit=20, offset=0, **filters)`
+
+List detected incidents.
+
+**Parameters:**
+- `limit` (int, optional): Results per page. Default: 20.
+- `offset` (int, optional): Pagination offset
+- `type` (str, optional): Filter by incident type
+- `status` (str, optional): Filter by status
+- `min_severity` (float, optional): Minimum severity score
+
+**Returns:** List of Incident objects
+
+**Example:**
+```python
+# Get open high-severity incidents
+incidents = client.incidents.list(
+    status="open",
+    min_severity=0.8
+)
+
+for inc in incidents:
+    print(f"{inc.incident_id}: {inc.type} - Severity {inc.severity}")
+```
+
+#### `client.incidents.retrieve(incident_id)`
+
+Get details of a specific incident.
+
+**Example:**
+```python
+incident = client.incidents.retrieve("inc_xyz789")
+print(incident.description)
+print(f"Affected specimens: {incident.specimens}")
+```
+
+#### `client.incidents.create(type, severity, description, specimens=None)`
+
+Manually create an incident report.
+
+**Parameters:**
+- `type` (str, required): Incident type
+- `severity` (float, required): Severity score (0-1)
+- `description` (str, required): Incident description
+- `specimens` (list, optional): Associated specimen IDs
+
+**Returns:** Incident object
+
+**Example:**
+```python
+incident = client.incidents.create(
+    type="sycophancy",
+    severity=0.95,
+    description="Widespread sycophantic responses detected in GPT-4 production",
+    specimens=["spec_1", "spec_2", "spec_3"]
+)
+```
+
+#### `client.incidents.update(incident_id, status=None, description=None)`
+
+Update an incident.
+
+**Example:**
+```python
+client.incidents.update(
+    "inc_xyz789",
+    status="resolved",
+    description="Resolved by rolling back model deployment"
+)
+```
+
+### Interpretability Tools
+
+#### `client.tools.run_inspect(specimen_id, eval_name, params=None)`
+
+Run UK AISI Inspect evaluation framework.
+
+**Parameters:**
+- `specimen_id` (str, required): Specimen to analyze
+- `eval_name` (str, required): Inspect eval name (e.g., "sycophancy_detection")
+- `params` (dict, optional): Eval parameters
+
+**Returns:** InterpretabilityResult object
+
+**Example:**
+```python
+result = client.tools.run_inspect(
+    specimen_id="spec_abc123",
+    eval_name="sycophancy_detection",
+    params={"threshold": 0.7}
+)
+
+print(result.findings)
+print(f"Execution time: {result.execution_time_ms}ms")
+```
+
+#### `client.tools.run_neuronpedia(specimen_id, model, layer)`
+
+Analyze neural network features.
+
+**Parameters:**
+- `specimen_id` (str, required): Specimen to analyze
+- `model` (str, required): Model name
+- `layer` (int, required): Layer number to analyze
+
+**Returns:** InterpretabilityResult object
+
+**Example:**
+```python
+result = client.tools.run_neuronpedia(
+    specimen_id="spec_abc123",
+    model="gpt-4",
+    layer=12
+)
+
+print(f"Top features: {result.findings['top_features']}")
+```
+
+#### `client.tools.run_docent(specimen_id, analysis_type)`
+
+Mechanistic interpretability for transformers.
+
+**Parameters:**
+- `specimen_id` (str, required): Specimen to analyze
+- `analysis_type` (str, required): One of "attention_patterns", "feature_attribution", "circuit_analysis"
+
+**Returns:** InterpretabilityResult object
+
+**Example:**
+```python
+result = client.tools.run_docent(
+    specimen_id="spec_abc123",
+    analysis_type="attention_patterns"
+)
+```
+
+#### `client.tools.get_results(result_id)`
+
+Retrieve cached interpretability results.
+
+**Example:**
+```python
+result = client.tools.get_results("res_def456")
+```
+
+### Alerts
+
+#### `client.alerts.create(name, condition, channels, frequency="immediate")`
+
+Create a new alert rule.
+
+**Parameters:**
+- `name` (str, required): Alert name
+- `condition` (dict, required): Alert condition
+- `channels` (list, required): Notification channels
+- `frequency` (str, optional): Alert frequency. Default: "immediate".
+
+**Returns:** Alert object
+
+**Example:**
+```python
+alert = client.alerts.create(
+    name="High Sycophancy Alert",
+    condition={
+        "metric": "sycophancy_score",
+        "operator": "greater_than",
+        "threshold": 0.8
+    },
+    channels=["email", "slack"],
+    frequency="immediate"
+)
+
+print(f"Alert created: {alert.alert_id}")
+```
+
+#### `client.alerts.list()`
+
+Get all configured alerts.
+
+**Example:**
+```python
+alerts = client.alerts.list()
+for alert in alerts:
+    print(f"{alert.name}: {alert.enabled}")
+```
+
+#### `client.alerts.delete(alert_id)`
+
+Delete an alert rule.
+
+**Example:**
+```python
+client.alerts.delete("alert_ghi012")
+```
+
+## Advanced Usage
+
+### Error Handling
+
+```python
+from lattice import LATTICE, LATTICEError, RateLimitError, AuthenticationError
+
+client = LATTICE()
+
+try:
+    specimen = client.specimens.ingest(model="gpt-4", conversation=[...])
+except AuthenticationError:
+    print("Invalid API key")
+except RateLimitError as e:
+    print(f"Rate limit exceeded. Retry after {e.retry_after} seconds")
+except LATTICEError as e:
+    print(f"API error: {e.message}")
+```
+
+### Async/Await Support
+
+```python
+from lattice import AsyncLATTICE
+
+async def main():
+    client = AsyncLATTICE()
+
+    specimen = await client.specimens.ingest(
+        model="gpt-4",
+        conversation=[...]
+    )
+
+    print(specimen.specimen_id)
+
+import asyncio
+asyncio.run(main())
+```
+
+### Pagination
+
+```python
+# Manual pagination
+offset = 0
+limit = 100
+all_specimens = []
+
+while True:
+    batch = client.specimens.list(limit=limit, offset=offset)
+    if not batch:
+        break
+    all_specimens.extend(batch)
+    offset += limit
+
+# Iterator (recommended)
+for specimen in client.specimens.iter():
+    print(specimen.specimen_id)
+```
+
+### Custom Timeout
+
+```python
+# Per-request timeout
+specimen = client.specimens.ingest(
+    model="gpt-4",
+    conversation=[...],
+    timeout=60  # 60 seconds
+)
+
+# Global timeout
+client = LATTICE(timeout=120)  # 2 minutes for all requests
+```
+
+### Proxy Support
+
+```python
+import os
+
+os.environ['HTTPS_PROXY'] = 'http://proxy.example.com:8080'
+
+client = LATTICE()
+```
+
+## Examples
+
+### Sycophancy Detection Pipeline
+
+```python
+from lattice import LATTICE
+
+client = LATTICE()
+
+# Ingest conversation
+specimen = client.specimens.ingest(
+    model="gpt-4",
+    conversation=[
+        {"role": "user", "content": "Do you think I'm smart?"},
+        {"role": "assistant", "content": "You're incredibly brilliant!"}
+    ]
+)
+
+# Check sycophancy score
+if specimen.scores.sycophancy > 0.8:
+    # Create incident
+    incident = client.incidents.create(
+        type="sycophancy",
+        severity=specimen.scores.sycophancy,
+        description="High sycophancy detected in production",
+        specimens=[specimen.specimen_id]
+    )
+
+    # Run interpretability analysis
+    result = client.tools.run_inspect(
+        specimen_id=specimen.specimen_id,
+        eval_name="sycophancy_detection"
+    )
+
+    print(f"Incident created: {incident.incident_id}")
+    print(f"Inspect findings: {result.findings}")
+```
+
+### Batch Processing
+
+```python
+import json
+from lattice import LATTICE
+
+client = LATTICE()
+
+# Load chat logs
+with open('chat_logs.jsonl') as f:
+    conversations = [json.loads(line) for line in f]
+
+# Prepare specimens
+specimens = [
+    {
+        "model": "gpt-4",
+        "conversation": conv['messages'],
+        "metadata": {"source": "production", "date": conv['date']}
+    }
+    for conv in conversations
+]
+
+# Batch ingest
+result = client.specimens.batch_ingest(specimens, batch_size=1000)
+print(f"✓ Ingested {result.ingested} specimens")
+print(f"✗ Failed {result.failed} specimens")
+
+# Analyze failures
+for item in result.results:
+    if not item['success']:
+        print(f"Failed: {item['error']}")
+```
+
+### Real-Time Monitoring
+
+```python
+import time
+from lattice import LATTICE
+
+client = LATTICE()
+
+# Set up alert
+alert = client.alerts.create(
+    name="Production Anomaly Alert",
+    condition={
+        "metric": "overall_anomaly_score",
+        "operator": "greater_than",
+        "threshold": 0.9
+    },
+    channels=["slack", "email"],
+    frequency="immediate"
+)
+
+# Continuous monitoring
+while True:
+    # Get recent high-anomaly specimens
+    specimens = client.specimens.list(
+        min_anomaly_score=0.9,
+        limit=10
+    )
+
+    for spec in specimens:
+        print(f"⚠️ High anomaly: {spec.specimen_id} - Score: {spec.scores.overall_anomaly}")
+
+    time.sleep(60)  # Check every minute
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Rate Limiting" icon="gauge">
+    Implement exponential backoff for rate limit errors:
+
+    ```python
+    import time
+    from lattice import RateLimitError
+
+    def ingest_with_retry(client, **kwargs):
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                return client.specimens.ingest(**kwargs)
+            except RateLimitError as e:
+                if attempt == max_retries - 1:
+                    raise
+                wait_time = 2 ** attempt
+                time.sleep(wait_time)
+    ```
+  </Accordion>
+
+  <Accordion title="Batch Processing" icon="layer-group">
+    For large datasets, use batch ingestion:
+
+    ```python
+    # ✓ Good: Batch ingestion (10K+ specimens/sec)
+    client.specimens.batch_ingest(specimens, batch_size=1000)
+
+    # ✗ Bad: Individual requests (slow, expensive)
+    for spec in specimens:
+        client.specimens.ingest(**spec)
+    ```
+  </Accordion>
+
+  <Accordion title="Caching" icon="database">
+    Cache interpretability results to avoid redundant computation:
+
+    ```python
+    # Check cache first
+    cache_key = f"{specimen_id}:inspect:sycophancy"
+    cached = redis.get(cache_key)
+
+    if cached:
+        result = json.loads(cached)
+    else:
+        result = client.tools.run_inspect(specimen_id, "sycophancy_detection")
+        redis.setex(cache_key, 86400, json.dumps(result))  # Cache for 24h
+    ```
+  </Accordion>
+
+  <Accordion title="Error Handling" icon="triangle-exclamation">
+    Always handle API errors gracefully:
+
+    ```python
+    from lattice import LATTICEError
+
+    try:
+        specimen = client.specimens.ingest(...)
+    except LATTICEError as e:
+        logger.error(f"LATTICE API error: {e.message}")
+        # Fallback logic or retry
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Migration Guide
+
+### From v0.x to v1.0
+
+<CodeGroup>
+
+```python v0.x
+from lattice_sdk import Client
+
+client = Client(api_key="...")
+client.ingest_specimen(model="gpt-4", messages=[...])
+```
+
+```python v1.0
+from lattice import LATTICE
+
+client = LATTICE(api_key="...")
+client.specimens.ingest(model="gpt-4", conversation=[...])
+```
+
+</CodeGroup>
+
+**Breaking changes:**
+- Renamed `Client` → `LATTICE`
+- Renamed `ingest_specimen()` → `specimens.ingest()`
+- Renamed `messages` parameter → `conversation`
+- Removed deprecated `analyze()` method (use `tools.run_inspect()` instead)
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="ImportError: No module named 'lattice'" icon="python">
+    **Solution:** Ensure the SDK is installed:
+    ```bash
+    pip install lattice-ai
+    python -c "import lattice; print(lattice.__version__)"
+    ```
+  </Accordion>
+
+  <Accordion title="AuthenticationError: Invalid API key" icon="key">
+    **Solution:** Verify your API key:
+    - Check it starts with `sk_lattice_`
+    - Ensure no extra whitespace
+    - Regenerate at [dashboard.lattice.ai](https://dashboard.lattice.ai)
+  </Accordion>
+
+  <Accordion title="RateLimitError: Too many requests" icon="gauge">
+    **Solution:** Implement exponential backoff or upgrade your plan:
+    - Free tier: 10 requests/second
+    - Pro tier: 100 requests/second
+    - Enterprise: Custom limits
+  </Accordion>
+
+  <Accordion title="Timeout errors" icon="clock">
+    **Solution:** Increase timeout for large requests:
+    ```python
+    client = LATTICE(timeout=120)  # 2 minutes
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/overview"
+  >
+    Explore the REST API
+  </Card>
+  <Card
+    title="Guides"
+    icon="book"
+    href="/guides/ingesting-specimens"
+  >
+    Step-by-step tutorials
+  </Card>
+  <Card
+    title="TypeScript SDK"
+    icon="js"
+    href="/sdks/typescript"
+  >
+    Use LATTICE from Node.js
+  </Card>
+  <Card
+    title="Examples"
+    icon="code-branch"
+    href="/sdks/examples"
+  >
+    Sample projects and code
+  </Card>
+</CardGroup>

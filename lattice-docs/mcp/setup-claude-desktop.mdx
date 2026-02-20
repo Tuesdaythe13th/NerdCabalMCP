@@ -1,0 +1,429 @@
+---
+title: 'Setup Claude Desktop'
+description: 'Configure LATTICE Redis MCP with Claude Desktop in 10 minutes'
+---
+
+# Setting Up LATTICE with Claude Desktop
+
+This guide will walk you through configuring Claude Desktop to use LATTICE's Redis MCP server for natural language database queries.
+
+## Prerequisites
+
+<AccordionGroup>
+  <Accordion title="1. Claude Desktop" icon="desktop">
+    Download and install [Claude Desktop](https://claude.ai/download) (macOS, Windows, or Linux).
+  </Accordion>
+
+  <Accordion title="2. Redis Stack" icon="database">
+    Install Redis Stack for full Redis functionality:
+
+    ```bash
+    # macOS (Homebrew)
+    brew install redis-stack
+
+    # Docker
+    docker run -d --name redis-stack -p 6379:6379 redis/redis-stack:latest
+
+    # Linux (Ubuntu/Debian)
+    curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+    sudo apt-get update
+    sudo apt-get install redis-stack-server
+    ```
+
+    Verify Redis is running:
+    ```bash
+    redis-cli ping
+    # Expected output: PONG
+    ```
+  </Accordion>
+
+  <Accordion title="3. Node.js 18+" icon="node-js">
+    The MCP server requires Node.js 18 or higher:
+
+    ```bash
+    node --version
+    # Should output v18.0.0 or higher
+    ```
+
+    If you need to install/upgrade Node.js:
+    - macOS: `brew install node`
+    - Windows: Download from [nodejs.org](https://nodejs.org)
+    - Linux: Use [nvm](https://github.com/nvm-sh/nvm)
+  </Accordion>
+
+  <Accordion title="4. LATTICE API Key" icon="key">
+    Get your API key from [dashboard.lattice.ai](https://dashboard.lattice.ai):
+    1. Navigate to **Settings → API Keys**
+    2. Click **Generate New Key**
+    3. Copy the key (starts with `sk_lattice_`)
+  </Accordion>
+</AccordionGroup>
+
+## Installation
+
+<Steps>
+  <Step title="Clone LATTICE Repository">
+    ```bash
+    git clone https://github.com/Tuesdaythe13th/lattice.git
+    cd lattice/mcp-server
+    ```
+  </Step>
+
+  <Step title="Install Dependencies">
+    ```bash
+    npm install
+    ```
+
+    This installs:
+    - `@modelcontextprotocol/sdk` - MCP protocol implementation
+    - `redis` - Redis client for Node.js
+    - `ioredis` - Advanced Redis client with Streams support
+  </Step>
+
+  <Step title="Configure Environment Variables">
+    Create a `.env` file in the `mcp-server/` directory:
+
+    ```bash
+    # .env
+    REDIS_HOST=localhost
+    REDIS_PORT=6379
+    REDIS_PASSWORD=  # Leave empty if no password
+    LATTICE_API_KEY=sk_lattice_your_key_here
+    ```
+
+    <Warning>
+      Never commit `.env` files to version control. Add `.env` to your `.gitignore`.
+    </Warning>
+  </Step>
+
+  <Step title="Build the MCP Server">
+    ```bash
+    npm run build
+    ```
+
+    This compiles TypeScript to JavaScript in the `dist/` directory.
+  </Step>
+
+  <Step title="Test the Server">
+    ```bash
+    npm run dev
+    ```
+
+    You should see:
+    ```
+    ✓ Redis MCP Server started
+    ✓ Connected to Redis at localhost:6379
+    ✓ LATTICE API authenticated
+    ✓ Listening for MCP connections...
+    ```
+
+    Press `Ctrl+C` to stop the dev server.
+  </Step>
+</Steps>
+
+## Configure Claude Desktop
+
+<Steps>
+  <Step title="Locate Claude Desktop Config">
+    Find your Claude Desktop configuration file:
+
+    **macOS:**
+    ```bash
+    ~/Library/Application Support/Claude/claude_desktop_config.json
+    ```
+
+    **Windows:**
+    ```
+    %APPDATA%\Claude\claude_desktop_config.json
+    ```
+
+    **Linux:**
+    ```bash
+    ~/.config/Claude/claude_desktop_config.json
+    ```
+
+    If the file doesn't exist, create it with `{}` as the initial content.
+  </Step>
+
+  <Step title="Add LATTICE MCP Server">
+    Edit `claude_desktop_config.json` and add the LATTICE server:
+
+    ```json
+    {
+      "mcpServers": {
+        "lattice": {
+          "command": "node",
+          "args": [
+            "/absolute/path/to/lattice/mcp-server/dist/index.js"
+          ],
+          "env": {
+            "REDIS_HOST": "localhost",
+            "REDIS_PORT": "6379",
+            "LATTICE_API_KEY": "sk_lattice_your_key_here"
+          }
+        }
+      }
+    }
+    ```
+
+    <Note>
+      **Important:** Replace `/absolute/path/to/lattice` with the actual path where you cloned the repository.
+
+      Get the absolute path:
+      ```bash
+      cd lattice/mcp-server
+      pwd
+      ```
+    </Note>
+  </Step>
+
+  <Step title="Restart Claude Desktop">
+    1. Quit Claude Desktop completely
+    2. Reopen Claude Desktop
+    3. You should see "LATTICE" in the MCP servers list (check the status bar or settings)
+  </Step>
+
+  <Step title="Verify Connection">
+    In Claude Desktop, send a message:
+
+    ```
+    "Can you check if LATTICE Redis MCP is connected?"
+    ```
+
+    Claude should confirm the connection and show available tools.
+  </Step>
+</Steps>
+
+## Test Natural Language Queries
+
+Try these example queries in Claude Desktop:
+
+<CodeGroup>
+
+```markdown Query 1: Leaderboard
+"Show me the top 5 most severe incidents from today"
+
+Claude will execute:
+- ZREVRANGE leaderboard:all 0 4 WITHSCORES
+- Fetch incident details for each
+- Format results in a readable table
+```
+
+```markdown Query 2: Real-Time Stats
+"How many specimens have been ingested in the last hour?"
+
+Claude will execute:
+- XLEN stream:specimens
+- Filter by timestamp
+- Return count
+```
+
+```markdown Query 3: Anomaly Detection
+"Find all GPT-4 specimens with sycophancy score > 0.8 from the last 24 hours"
+
+Claude will execute:
+- ZRANGEBYSCORE leaderboard:sycophancy 0.8 +inf
+- Filter by model and timestamp
+- Return matching specimens
+```
+
+</CodeGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Error: Redis connection refused" icon="circle-xmark">
+    **Problem:** MCP server can't connect to Redis.
+
+    **Solutions:**
+    1. Ensure Redis is running:
+       ```bash
+       redis-cli ping
+       ```
+    2. Check Redis port (default: 6379):
+       ```bash
+       redis-cli -p 6379 ping
+       ```
+    3. Verify `REDIS_HOST` and `REDIS_PORT` in your config
+    4. If using Docker, ensure port mapping: `-p 6379:6379`
+  </Accordion>
+
+  <Accordion title="Error: LATTICE API key invalid" icon="key">
+    **Problem:** API authentication failed.
+
+    **Solutions:**
+    1. Verify your API key starts with `sk_lattice_`
+    2. Check for extra spaces or newlines in `.env`
+    3. Regenerate key at [dashboard.lattice.ai](https://dashboard.lattice.ai)
+    4. Ensure key hasn't expired (Enterprise keys only)
+  </Accordion>
+
+  <Accordion title="MCP server not showing in Claude Desktop" icon="desktop">
+    **Problem:** Claude Desktop doesn't recognize the LATTICE server.
+
+    **Solutions:**
+    1. Verify absolute path in `claude_desktop_config.json`:
+       ```bash
+       ls /absolute/path/to/lattice/mcp-server/dist/index.js
+       ```
+    2. Check JSON syntax (use a validator like jsonlint.com)
+    3. Ensure you restarted Claude Desktop completely
+    4. Check Claude Desktop logs:
+       - macOS: `~/Library/Logs/Claude/`
+       - Windows: `%APPDATA%\Claude\logs\`
+       - Linux: `~/.config/Claude/logs/`
+  </Accordion>
+
+  <Accordion title="Queries returning empty results" icon="database">
+    **Problem:** Natural language queries work, but return no data.
+
+    **Solutions:**
+    1. Verify Redis has data:
+       ```bash
+       redis-cli
+       > KEYS *
+       > ZCARD leaderboard:all
+       ```
+    2. Ingest test specimens using the [Quickstart Guide](/quickstart)
+    3. Check Redis database number (default: 0):
+       ```bash
+       redis-cli -n 0 KEYS *
+       ```
+  </Accordion>
+
+  <Accordion title="Permission denied errors" icon="lock">
+    **Problem:** Node.js can't execute the MCP server.
+
+    **Solutions:**
+    1. Ensure executable permissions:
+       ```bash
+       chmod +x /path/to/lattice/mcp-server/dist/index.js
+       ```
+    2. Verify Node.js is in your PATH:
+       ```bash
+       which node
+       ```
+    3. Use absolute path to Node.js in config:
+       ```json
+       "command": "/usr/local/bin/node"
+       ```
+  </Accordion>
+</AccordionGroup>
+
+## Advanced Configuration
+
+### Multiple Redis Databases
+
+If you want to use separate Redis databases for different environments:
+
+```json
+{
+  "mcpServers": {
+    "lattice-production": {
+      "command": "node",
+      "args": ["/path/to/lattice/mcp-server/dist/index.js"],
+      "env": {
+        "REDIS_HOST": "prod-redis.lattice.ai",
+        "REDIS_PORT": "6379",
+        "REDIS_DB": "0",
+        "REDIS_PASSWORD": "your_production_password",
+        "LATTICE_API_KEY": "sk_lattice_prod_key"
+      }
+    },
+    "lattice-development": {
+      "command": "node",
+      "args": ["/path/to/lattice/mcp-server/dist/index.js"],
+      "env": {
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6379",
+        "REDIS_DB": "1",
+        "LATTICE_API_KEY": "sk_lattice_dev_key"
+      }
+    }
+  }
+}
+```
+
+### Redis Cluster Support
+
+For high-availability deployments with Redis Cluster:
+
+```json
+{
+  "mcpServers": {
+    "lattice": {
+      "command": "node",
+      "args": ["/path/to/lattice/mcp-server/dist/index.js"],
+      "env": {
+        "REDIS_CLUSTER": "true",
+        "REDIS_NODES": "redis1.lattice.ai:6379,redis2.lattice.ai:6379,redis3.lattice.ai:6379",
+        "LATTICE_API_KEY": "sk_lattice_your_key"
+      }
+    }
+  }
+}
+```
+
+### Custom Redis Configuration
+
+For advanced Redis features (TLS, Sentinel, etc.):
+
+```json
+{
+  "mcpServers": {
+    "lattice": {
+      "command": "node",
+      "args": ["/path/to/lattice/mcp-server/dist/index.js"],
+      "env": {
+        "REDIS_HOST": "redis.lattice.ai",
+        "REDIS_PORT": "6380",
+        "REDIS_TLS": "true",
+        "REDIS_PASSWORD": "your_password",
+        "REDIS_SENTINEL": "true",
+        "REDIS_SENTINEL_MASTER": "lattice-master",
+        "LATTICE_API_KEY": "sk_lattice_your_key"
+      }
+    }
+  }
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Natural Language Queries"
+    icon="messages-question"
+    href="/mcp/natural-language-queries"
+  >
+    Learn query patterns and examples
+  </Card>
+  <Card
+    title="Leaderboards Use Case"
+    icon="trophy"
+    href="/mcp/use-cases/leaderboards"
+  >
+    Dive into Sorted Sets implementation
+  </Card>
+  <Card
+    title="Real-Time Alerts"
+    icon="bell"
+    href="/mcp/use-cases/messaging"
+  >
+    Set up Pub/Sub for instant notifications
+  </Card>
+  <Card
+    title="Performance Tuning"
+    icon="gauge-high"
+    href="/mcp/performance"
+  >
+    Optimize Redis for high-throughput
+  </Card>
+</CardGroup>
+
+---
+
+<Note>
+  **Need help?** Join our [Discord community](https://discord.gg/lattice) or check the [MCP Protocol Documentation](https://modelcontextprotocol.io/introduction).
+</Note>
