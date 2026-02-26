@@ -59,13 +59,13 @@ My work spans **mechanistic interpretability, adversarial ML, quantum security, 
 ### Technical Contributor & Working Group Co-Founder | MLCommons
 *2023 – Present*
 
-**Agentic AI Working Group** (Co-Founder)
+**Agentic AI Working Group*
 - Released **Agentic Product Maturity Model** (2025) — industry-first framework for agentic system evaluation
 - Contributing to **ARES** (Agentic Risk Evaluation Suite) benchmark development
 - Designed evaluation patterns for multi-agent cascade failures and reliability metrics
 
 **AI Safety Working Group**
-- Lead contributor: **AILuminate v1.0** (arXiv:2404.03555) — comprehensive AI risk & reliability benchmark
+- active contributor: **AILuminate v1.0** (arXiv:2404.03555) — comprehensive AI risk & reliability benchmark
 - **Security Jailbreak Benchmark v0.5** — ISO/IEC 42001-aligned safety and resilience metrics
 - MLPerf Automotive Benchmarking Task Force — safety-critical AI systems evaluation
 
