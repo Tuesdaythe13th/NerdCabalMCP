@@ -4,27 +4,84 @@
 
 import { spawn } from 'child_process';
 import { readdir, readFile, stat, access } from 'fs/promises';
-import { join, dirname } from 'path';
+import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import type { ExecutionResult, PipelineStatus, AgentInfo, StepStatus } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Only allow alphanumeric, underscore, hyphen, dot — no slashes or shell metacharacters
+const PROJECT_DIR_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$/;
+// Strict GitHub HTTPS URL — owner/repo path only
+const GITHUB_URL_PATTERN = /^https:\/\/github\.com\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+(\.git)?\/?$/;
+
+/**
+ * Validate and return a safe project directory name.
+ * Throws if the name contains path separators, traversal sequences, or other disallowed characters.
+ */
+export function validateProjectDir(dir: unknown): string {
+  if (!dir || typeof dir !== 'string') {
+    throw new Error('project_dir is required and must be a string');
+  }
+  const trimmed = dir.trim();
+  if (!PROJECT_DIR_PATTERN.test(trimmed)) {
+    throw new Error(
+      'project_dir must start with an alphanumeric character and contain only ' +
+      'alphanumeric characters, underscores, hyphens, or dots (max 128 chars)'
+    );
+  }
+  return trimmed;
+}
+
+/**
+ * Validate and return a safe GitHub repository URL.
+ * Only https://github.com/<owner>/<repo> format is accepted.
+ */
+export function validateGitHubUrl(url: unknown): string {
+  if (!url || typeof url !== 'string') {
+    throw new Error('github_url is required and must be a string');
+  }
+  const trimmed = url.trim();
+  if (!GITHUB_URL_PATTERN.test(trimmed)) {
+    throw new Error(
+      'github_url must be a valid GitHub repository URL ' +
+      '(e.g., https://github.com/owner/repo)'
+    );
+  }
+  return trimmed;
+}
+
+/**
+ * Resolve a sub-path relative to a base directory and verify it stays within that base.
+ * Throws if the resolved path escapes the base directory (path traversal).
+ */
+export function resolveSafePath(base: string, subPath: string): string {
+  const resolvedBase = resolve(base);
+  const resolvedTarget = resolve(base, subPath);
+  if (resolvedTarget !== resolvedBase && !resolvedTarget.startsWith(resolvedBase + '/')) {
+    throw new Error('Path traversal detected: access outside of allowed directory is not permitted');
+  }
+  return resolvedTarget;
+}
+
 export const PAPER2AGENT_ROOT = join(__dirname, '..', '..');
 
 /**
- * Execute a shell command and return the result
+ * Execute a command and return the result.
+ * shell is intentionally disabled to prevent injection via argument values.
  */
 export async function executeCommand(
   command: string,
   args: string[],
-  cwd?: string
+  cwd?: string,
+  env?: NodeJS.ProcessEnv
 ): Promise<ExecutionResult> {
   return new Promise((resolve) => {
     const proc = spawn(command, args, {
       cwd: cwd || PAPER2AGENT_ROOT,
-      shell: true,
+      shell: false,
+      env: env ?? process.env,
     });
 
     let stdout = '';
@@ -74,7 +131,7 @@ export async function exists(path: string): Promise<boolean> {
  * Get pipeline status for a project
  */
 export async function getPipelineStatus(projectDir: string): Promise<PipelineStatus> {
-  const fullPath = join(PAPER2AGENT_ROOT, projectDir);
+  const fullPath = resolveSafePath(PAPER2AGENT_ROOT, projectDir);
   const pipelineDir = join(fullPath, '.pipeline');
 
   const stepMarkers = {
@@ -157,7 +214,7 @@ export async function listAgents(): Promise<AgentInfo[]> {
  * Get detailed information about a specific agent
  */
 export async function getAgentInfo(projectDir: string): Promise<AgentInfo | null> {
-  const fullPath = join(PAPER2AGENT_ROOT, projectDir);
+  const fullPath = resolveSafePath(PAPER2AGENT_ROOT, projectDir);
 
   if (!(await exists(fullPath))) {
     return null;

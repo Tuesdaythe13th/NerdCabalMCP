@@ -19,9 +19,10 @@ import {
   getPipelineStatus,
   listAgents,
   getAgentInfo,
+  validateProjectDir,
+  validateGitHubUrl,
   PAPER2AGENT_ROOT,
 } from './utils.js';
-import type { Paper2AgentConfig } from './types.js';
 import { generateRubricArtifacts } from './rubric-architect.js';
 import type { RubricGenerationRequest } from './rubric-types.js';
 import { createExperimentalDesignerPrompts, generateExperimentalDesignReport } from './experimental-designer.js';
@@ -929,24 +930,34 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const config = args as unknown as Paper2AgentConfig;
+        const rawArgs = args as Record<string, unknown>;
+
+        // Validate inputs — throws on invalid values
+        const projectDir = validateProjectDir(rawArgs.project_dir);
+        const githubUrl = validateGitHubUrl(rawArgs.github_url);
+        // Limit tutorials string length to prevent oversized arguments
+        const tutorials = rawArgs.tutorials
+          ? String(rawArgs.tutorials).slice(0, 512)
+          : undefined;
+
         const scriptArgs = [
           'Paper2Agent.sh',
-          '--project_dir',
-          config.projectDir,
-          '--github_url',
-          config.githubUrl,
+          '--project_dir', projectDir,
+          '--github_url', githubUrl,
         ];
 
-        if (config.tutorials) {
-          scriptArgs.push('--tutorials', config.tutorials);
+        if (tutorials) {
+          scriptArgs.push('--tutorials', tutorials);
         }
 
-        if (config.apiKey) {
-          scriptArgs.push('--api', config.apiKey);
-        }
+        // Pass API key via environment variable — never as a CLI argument
+        // (CLI arguments are visible in process listings via ps/top)
+        const apiKey = rawArgs.api_key ? String(rawArgs.api_key) : undefined;
+        const env: NodeJS.ProcessEnv = apiKey
+          ? { ...process.env, ANTHROPIC_API_KEY: apiKey }
+          : { ...process.env };
 
-        const result = await executeCommand('bash', scriptArgs, PAPER2AGENT_ROOT);
+        const result = await executeCommand('bash', scriptArgs, PAPER2AGENT_ROOT, env);
 
         return {
           content: [
@@ -956,9 +967,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 {
                   success: result.success,
                   message: result.success
-                    ? `Successfully initiated Paper2Agent creation for ${config.projectDir}`
+                    ? `Successfully initiated Paper2Agent creation for ${projectDir}`
                     : `Failed to create Paper2Agent: ${result.stderr}`,
-                  projectDir: config.projectDir,
+                  projectDir: projectDir,
                   output: result.stdout,
                   error: result.stderr,
                 },
@@ -974,7 +985,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const { project_dir } = args as unknown as { project_dir: string };
+        const project_dir = validateProjectDir((args as Record<string, unknown>).project_dir);
         const status = await getPipelineStatus(project_dir);
 
         return {
@@ -1011,7 +1022,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const { project_dir } = args as unknown as { project_dir: string };
+        const project_dir = validateProjectDir((args as Record<string, unknown>).project_dir);
         const info = await getAgentInfo(project_dir);
 
         if (!info) {
@@ -1046,7 +1057,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const { project_dir } = args as unknown as { project_dir: string };
+        const project_dir = validateProjectDir((args as Record<string, unknown>).project_dir);
         const info = await getAgentInfo(project_dir);
 
         if (!info) {
