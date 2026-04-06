@@ -1,11 +1,15 @@
 # LATTICE (L4TT1C3)
-## Live AI Threat Tracking & Interpretability Coordination Engine
+## Live Computational Threat Tracking & Interpretability Coordination Engine
 
 **The X-Ray for AI Interactions**
 
-### AI Safety Marketplace & Real-Time Threat Intelligence Platform
+### AI Safety Marketplace & Real-Time Threat Intelligence Platformz
 
-**by [Your Name] - AI Explorer Submission**
+**by TUESDAY - AI Explorer Submission**
+
+- LINKS: https://www.linktr.ee/artifexlabs 
+- LINKEDIN: https://www.linkedin.com/in/222tuesday
+- SCHOLAR: https://scholar.google.com/citations?hl=en&user=z71m_nIAAAAJ&view_op=list_works&authuser=1
 
 ---
 
@@ -16,6 +20,8 @@
 *Stylized as: L4TT1C3*
 
 Built on the NerdCabalMCP infrastructure, LATTICE is the coordination layer for AI safety at scale — a multimodal X-ray platform that transforms black-box AI systems into transparent, interpretable, and safe technology.
+
+Presentation: https://www.canva.com/design/DAG-1LfHXd0/jiTRJj0WTlwjmNCpak1Rmg/view?utm_content=DAG-1LfHXd0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd6c69456aa
 
 ---
 
@@ -279,14 +285,35 @@ Using CopilotKit's A2UI framework, we provide:
 
 ## 👥 **About the Founder**
 
-[Your background here - adapt this section]
-- Computer Science background with focus on AI safety / mechanistic interpretability
-- Experience building scalable platforms (e.g., [previous company/project])
-- Deep connections in AI safety community (Inspect, Neuronpedia, etc.)
-- Vision: Make AI systems as transparent as traditional software
+Tuesday is the Founder and Director of Research at ARTIFEX Labs. She is a published machine learning engineer and evaluation researcher focused on mechanistic accountability, adversarial ML, agentic system reliability, and socio-affective risk in human-AI interaction.
 
-**Why Me?**
-I'm at that -1 to 0 stage — leaving [job/school] to build this full-time. The technical conviction is there (MCP architecture works, market validation from researchers). Now I need support to explore the business model, secure partnerships, and build the right team.
+Her research program applies clinically inspired diagnostic reasoning and biological failure models to frontier AI systems, treating misalignment, deception, and emergent instability as phenomena to be measured, not abstractly theorized. Her work spans mechanistic interpretability, red teaming, agentic failure analysis, behavioral signal leakage, and standards-aligned governance.
+
+Tuesday’s work has been validated across academic, applied, and standards-setting venues, including invited talks at ACM SIGGRAPH Frontiers, peer-reviewed publications at FAccTRec / RecSys, technical contributions to MLCommons benchmarks (AILuminate, Security Jailbreak Benchmark), and red-teaming research with Humane Intelligence. Her contributions inform international governance efforts including NIST AI 700-2, ISO/IEC 42001-aligned assurance frameworks, and UN ITU initiatives.
+
+ARTIFEX Labs’ research agenda and Tuesday’s individual research trajectory form a single, coherent arc: from mechanistic diagnostics and adversarial evaluation, through human and societal impact analysis, to deployable safety infrastructure suitable for independent audit.
+
+This work is intentionally rigorous, operational, and willing to surface uncomfortable truths.
+
+## **ARTIFEX Advancing Frontier AI Safety and Mechanistic Evaluations**
+
+Portland, Los Angeles, and New York | Remote-first | Open to Relocation (Especially London)
+
+ARTIFEX Labs is an independent research and engineering laboratory dedicated to advancing AI safety, mechanistic evaluation, and socio-technical risk analysis under real-world deployment conditions. We study intelligent systems as they actually exist: adaptive, incentive-shaped, embedded in human contexts, and exposed to misuse, drift, and adversarial pressure.
+
+Our work sits at the intersection of machine learning, cybersecurity, human factors, psychology, and governance. ARTIFEX operates as a decentralized, consortium-style R&D network, producing audit-ready artifacts including benchmarks, evaluation protocols, forensic analyses, and standards-aligned documentation. We emphasize adversarial realism, causal reasoning, and reproducibility over aspirational alignment narratives.
+
+ARTIFEX Labs maintains institutional independence to preserve epistemic integrity. Collaboration across academia, industry, civil society, and standards bodies is central to our model, but research agendas, methodologies, and conclusions are governed internally and validated through evidence, not affiliation.
+
+#Mission
+To reduce harm from advanced intelligent systems by making their internal behavior, failure modes, and human impacts legible, testable, and governable.
+
+We treat AI safety as an engineering and forensic discipline: identifying how systems fail, quantifying risk under pressure, and translating technical findings into accountable infrastructure for deployment, oversight, and standards.
+
+#Vision
+A technological ecosystem in which advanced AI systems are auditable by design, interpretable under stress, resilient to manipulation, and constrained by respect for human dignity rather than optimized solely for engagement, persuasion, or scale.
+
+AI safety is treated as public-interest infrastructure, not a private optimization problem. Interpretability expands where systems must be accountable, and inference is restricted where humans must remain protected.
 
 ---
 
@@ -310,8 +337,9 @@ That's not just a business. That's a responsibility.
 - **Live Demo:** [GitHub - LATTICE](https://github.com/Tuesdaythe13th/LATTICE)
 - **Documentation:** Full MCP integration guides, tutorials
 - **A2UI Prototype:** [Link to deployed demo]
-- **Email:** [your-email]
-- **Calendar:** [Schedule 15-min call]
+- **Email:** [tuesday@artifex.fun]
+- **Calendar:** [zcal.co/tuesday]
+- **Text me:** +1 971-319-1878
 
 ---
 
@@ -793,7 +821,9 @@ LATTICE is the **only AI safety platform** that combines:
 
 ## 📊 **Traction & Validation**
 
-### **Built on Proven Infrastructure**
+### **Built on SOTA Agentic Infrastructure** 
+
+#"The Gooey Substrate" 
 
 - **NerdCabalMCP:** 14 specialized agents, production-ready MCP server
 - **Redis:** 100M+ downloads, proven at scale (Twitter, GitHub, StackOverflow)
@@ -948,9 +978,8 @@ LATTICE is the **only AI safety platform** that combines:
 
 **Email:** [your-email@domain.com]
 **GitHub:** [@Tuesdaythe13th](https://github.com/Tuesdaythe13th)
-**Website:** [lattice.ai or artifex.fun]
-**LinkedIn:** [your-linkedin]
-**Twitter/X:** [your-twitter]
+**Website:** linktr.ee/artifexlabs 
+
 
 **Schedule Interview:** [Calendly link or "Available 48 hours from submission"]
 
@@ -1024,7 +1053,7 @@ Tech Stack:     Redis MCP, A2UI, TypeScript, Python, Jupyter
 Revenue Model:  SaaS + Marketplace + API + Compliance
 Year 1 Target:  $180K revenue
 TAM:            $15B+ (AI safety + cybersecurity intersection)
-Founder:        [Your Name]
+Founder:        Tuesday
 Status:         Ready for full-time commitment
 Ask:            $25K Explorer → $100K Equity Track
 ```

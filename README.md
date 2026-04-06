@@ -1,6 +1,6 @@
-# TUESDAY'S LIL ROBOT SHOP OF HORRORS
-Salutations. This is the official ARTIFEX LABS NerdCabalMCP Server Guide. 
-contact tuesday@artifex.fun if you have somethin' to fuckin say. 
+A GIFT FROM TUESDAY'S LITTLE SHOP OF EXISTENTIAL HORRORS
+
+
 
 ### The Co-Scientist Platform for Granular Agent Control
 
@@ -28,6 +28,7 @@ contact tuesday@artifex.fun if you have somethin' to fuckin say.
 - [Configuration](#configuration)
 - [Running the MCP Server](#running-the-mcp-server)
 - [Using Agents](#using-agents)
+- [**Testing Guide** 🧪](TESTING.md) - Complete testing instructions
 - [Architecture](#architecture)
 - [API Reference](#api-reference)
 - [Advanced Usage](#advanced-usage)
@@ -39,56 +40,135 @@ contact tuesday@artifex.fun if you have somethin' to fuckin say.
 
 ```
 NerdCabalMCP/
-├── competitions/          # Competition submissions
-│   └── ai-explorer/       # 🏆 AI Explorer hackathon (Beta Fund)
-│       ├── README.md
-│       ├── AI_EXPLORER_SUBMISSION.md
-│       └── AI_Explorer_Hackathon_Demo.ipynb
-├── docs/                  # 📖 Documentation
-│   ├── README.md
-│   ├── QUICK_START.md
-│   ├── MCP_SERVER_GUIDE.md
+├── .claude/                           # Claude Code configuration
+│   ├── agents/                        # Custom Claude agents
+│   │   ├── tutorial-scanner.md        # Tutorial discovery agent
+│   │   ├── tutorial-executor.md       # Tutorial execution agent
+│   │   ├── tutorial-tool-extractor-implementor.md
+│   │   ├── test-verifier-improver.md  # Testing agent
+│   │   ├── environment-python-manager.md
+│   │   ├── benchmark-extractor.md     # Benchmark agents
+│   │   ├── benchmark-judge.md
+│   │   ├── benchmark-reviewer.md
+│   │   └── benchmark-solver.md
+│   └── settings.json                  # Claude settings
+├── competitions/                      # Competition submissions
+│   └── ai-explorer/                   # 🏆 AI Explorer hackathon
+├── docs/                              # 📖 All documentation
+│   ├── README.md                      # Docs index
+│   ├── QUICK_START.md                 # Quick start guide
+│   ├── MCP_SERVER_GUIDE.md            # MCP server details
 │   ├── ARTIFEX_NERD_SWARM_ARCHITECTURE.md
-│   └── ... (see docs/README.md for full list)
-├── notebooks/             # 📓 Jupyter notebooks
+│   ├── API_KEY_MANAGEMENT.md
+│   ├── CORRECTED_DOCUMENTATION.md
+│   ├── README_ENTERPRISE_IP.md
+│   ├── ENHANCEMENTS_REPORT.md         # Feature enhancements
+│   ├── HACKATHON_SUBMISSION.md        # Submission details
+│   ├── IMPLEMENTATION_ROADMAP.md      # Development roadmap
+│   └── SUBMISSION_COMPLETE.md
+├── hackathon-submission/              # Hackathon materials
+│   ├── assets/                        # Presentation assets
+│   │   ├── slide-deck.md
+│   │   ├── video-script.md
+│   │   ├── cover-image-specs.md
+│   │   ├── SLIDE_PRESENTATION.md
+│   │   ├── VIDEO_PRESENTATION_SCRIPT.md
+│   │   └── COVER_IMAGE_DESIGN.md
+│   ├── demo/                          # Demo application
+│   │   ├── app/
+│   │   └── styles/
+│   ├── docs/                          # Submission docs
+│   └── INDEX.md                       # Submission index
+├── mcp-server/                        # 🔧 MCP server (TypeScript)
+│   ├── src/                           # Source code
+│   │   ├── index.ts                   # Main server entry
+│   │   ├── administrator-agent.ts     # Org design agent
+│   │   ├── archival-system.ts         # IP evidence storage
+│   │   ├── budget-agent.ts            # Financial planning
+│   │   ├── ciso-agent.ts              # Security (STRIDE)
+│   │   ├── compliance-engine.ts       # GDPR/DMCA compliance
+│   │   ├── comptroller-agent.ts       # Operations (Iron Triangle)
+│   │   ├── creative-director.ts       # Design systems
+│   │   ├── dataset-builder.ts         # ML dataset creation
+│   │   ├── experimental-designer.ts   # Research methodology
+│   │   ├── forensic-analyst.ts        # Neural forensics (DSMMD)
+│   │   ├── ip-analytics.ts            # IP pattern detection
+│   │   ├── ip-protection-suite.ts     # IP suite orchestrator
+│   │   ├── mlflow-agent.ts            # MLflow queries
+│   │   ├── orchestrator.ts            # Multi-agent workflows
+│   │   ├── rubric-architect.ts        # LLM evaluation rubrics
+│   │   ├── visual-inspector.ts        # FiftyOne integration
+│   │   ├── utils.ts                   # Shared utilities
+│   │   └── *-types.ts                 # TypeScript type definitions
+│   ├── examples/                      # Usage examples
+│   ├── package.json                   # Dependencies
+│   ├── tsconfig.json                  # TypeScript config
+│   ├── mcp-config.json                # MCP configuration
+│   └── README.md                      # Server docs
+├── notebooks/                         # 📓 Jupyter notebooks
 │   ├── README.md
 │   └── MATS_Neural_Forensics_Demo.ipynb
-├── mcp-server/            # 🔧 MCP server implementation
-│   ├── src/
-│   │   ├── index.ts       # Main server
-│   │   └── agents/        # 14 specialized agents
-│   └── package.json
-├── scripts/               # 🛠️ Utility scripts
+├── PROOF_TO_PAY-AGENTIC_COMMERCE/     # Commerce project
+│   ├── assets/
+│   ├── demo/
+│   └── docs/                          # Commerce documentation
+│       ├── AGENTIC_COMMERCE_README.md
+│       ├── ARC_COMMERCE_ARCHITECTURE.md
+│       └── QUICK_START_ARC_COMMERCE.md
+├── prompts/                           # 💬 Prompt templates
+│   ├── step1_prompt.md
+│   ├── step2_prompt.md
+│   ├── step3_prompt.md
+│   ├── step4_prompt.md
+│   └── step5_prompt.md
+├── scripts/                           # 🛠️ Utility scripts
 │   ├── Paper2Agent.sh
 │   └── launch_remote_mcp.sh
-├── tutorials/             # 🎓 Tutorial content
+├── templates/                         # 📋 Project templates
+│   ├── AlphaPOP/
+│   ├── src/
+│   └── test/
+├── tools/                             # 🔨 Build tools
+│   ├── benchmark_assessor.py
+│   ├── benchmark_extractor.py
+│   ├── benchmark_reviewer.py
+│   ├── extract_notebook_images.py
+│   └── preprocess_notebook.py
+├── tutorials/                         # 🎓 Tutorial content
 │   └── siggraph-2026-sovereign-studio/
-├── agents/                # 🤖 Agent definitions
-├── prompts/               # 💬 Prompt templates
-├── templates/             # 📋 Project templates
-└── README.md              # 👈 You are here
+├── web_ui/                            # 🌐 Web interface
+│   └── templates/
+├── LICENSE                            # MIT License
+├── README.md                          # 👈 You are here
+├── TESTING.md                         # 🧪 Comprehensive testing guide
+└── .gitignore                         # Git ignore rules
 ```
 
 ### Quick Links
-- **🏆 Hackathon Submission:** [competitions/ai-explorer/](./competitions/ai-explorer/)
+- **🧪 Testing Guide:** [TESTING.md](./TESTING.md) - **START HERE for testing!**
+- **🏆 Hackathon Submission:** [hackathon-submission/](./hackathon-submission/)
 - **📖 Full Documentation:** [docs/](./docs/)
 - **📓 Demo Notebooks:** [notebooks/](./notebooks/)
 - **🚀 Quick Start Guide:** [docs/QUICK_START.md](./docs/QUICK_START.md)
+- **🔧 MCP Server Guide:** [docs/MCP_SERVER_GUIDE.md](docs/MCP_SERVER_GUIDE.md)
+- **💻 Claude Code Guide:** [CLAUDE.MD](./CLAUDE.MD)
 
 ---
 
 ## 🤔 What is NerdCabalMCP?
 
-**NerdCabalMCP** is a Model Context Protocol (MCP) server that provides a **co-scientist platform** for AI-assisted research, operations, and creative work. Think of it as your personal team of 14 specialized AI experts, each with deep domain knowledge and the ability to collaborate seamlessly.
+**NerdCabalMCP** is a Model Context Protocol (MCP) server that provides a **co-scientist platform** for AI-assisted research, operations, creative work, and enterprise IP protection. Think of it as your personal team of 17 specialized AI experts, each with deep domain knowledge and the ability to collaborate seamlessly.
 
 ### Key Features
 
-- **🧠 14 Specialized Agents**: From financial planning to neural forensics
+- **🧠 17 Specialized Agents**: From financial planning to neural forensics to enterprise IP protection
+- **🛡️ Enterprise IP Protection Suite (NEW)**: IP analytics, compliance validation, cryptographic archival
 - **🔗 A2A Protocol Compliant**: Agent-to-Agent communication following Anthropic Design Kit standards
 - **🏗️ Modular Architecture**: Each agent is independently deployable and upgradeable
 - **🔐 Security-First**: Built-in CISO agent with STRIDE threat modeling
-- **📊 Production-Ready**: TypeScript implementation with full type safety
+- **📊 Production-Ready**: TypeScript + Python implementation with full type safety
 - **🌐 Multi-Platform**: Integrates with Claude Desktop, Streamlit, HuggingFace Spaces, and more
+- **⚖️ Multi-Jurisdiction Support**: US, EU, UK compliance validation (advisory, not legal advice)
 
 ---
 
@@ -112,11 +192,103 @@ Traditional AI tools give you one-size-fits-all assistants. NerdCabalMCP gives y
 
 ---
 
-## 👥 The 14 Agent Team
+## 👥 The 17 Agent Team
+
+### 🛡️ Enterprise IP Protection (NEW - January 2026)
+
+#### 1. **IP Analytics Engine**
+**Role**: Enterprise IP Intelligence & Pattern Detection
+**Expertise**: Patent/trademark/copyright pattern analysis, portfolio valuation, competitive scanning, geographic risk mapping
+
+**Use Cases**:
+- Detecting IP infringement patterns across large datasets
+- Geographic risk heatmaps for jurisdiction-specific threats
+- Portfolio valuation dashboards for asset management
+- Competitive infringement pattern scoring
+
+**Example**:
+```json
+{
+  "tool": "ip_analytics",
+  "action": "analyze_patterns",
+  "data": {
+    "ip_type": "copyright",
+    "timeframe_days": 90,
+    "portfolio_ids": ["PORT-001", "PORT-002"]
+  },
+  "jurisdiction": "US"
+}
+```
+
+**Key Features**:
+- Real-time pattern detection using ML bibliometrics
+- Cross-jurisdictional risk scoring (US, EU, UK)
+- ROI-based litigation opportunity ranking
+- Integration with USPTO/EPO/WIPO data sources
+
+#### 2. **Compliance Engine**
+**Role**: Multi-Jurisdiction Governance & Policy Validation
+**Expertise**: GDPR, DMCA, EU Copyright Directive, AI Act compliance validation
+
+**Use Cases**:
+- Pre-enforcement compliance checks for DMCA takedowns
+- GDPR audit trail generation for IP monitoring
+- EU Copyright Directive Article 17 compliance
+- AI Act risk assessment for automated detection systems
+
+**Example**:
+```json
+{
+  "tool": "compliance_check",
+  "action": "validate",
+  "context": {
+    "processes_personal_data": true,
+    "consent_obtained": true,
+    "takedown_notice_sent": false,
+    "ai_training_data": false
+  },
+  "jurisdiction": "EU"
+}
+```
+
+**Important**: Advisory only - not legal advice. All enforcement actions require human review.
+
+#### 3. **Archival System**
+**Role**: Cryptographic Evidence Storage & Chain-of-Custody
+**Expertise**: SHA-256 chain hashing, tamper-proof evidence archival, legal admissibility preparation
+
+**Use Cases**:
+- Storing IP infringement evidence with cryptographic integrity
+- Maintaining chain-of-custody for litigation
+- Generating tamper-proof audit trails
+- Preparing evidence packages for legal proceedings
+
+**Example**:
+```json
+{
+  "tool": "archival_system",
+  "action": "store",
+  "evidence": {
+    "type": "image",
+    "source": "https://example.com/infringement.jpg",
+    "description": "Unauthorized use of copyrighted work",
+    "jurisdiction": "US",
+    "case_id": "CASE-2026-001"
+  }
+}
+```
+
+**Key Features**:
+- SHA-256 chain hashing for tamper detection
+- Append-only ledger architecture
+- Metadata preservation for legal contexts
+- Integrity verification tools
+
+---
 
 ### 🔬 Research & Evaluation
 
-#### 1. **LLM-Rubric Architect**
+#### 4. **LLM-Rubric Architect**
 **Role**: Evaluation Framework Designer
 **Expertise**: Creates comprehensive rubrics for LLM evaluation, benchmark design, and quality criteria
 
@@ -135,7 +307,7 @@ Traditional AI tools give you one-size-fits-all assistants. NerdCabalMCP gives y
 }
 ```
 
-#### 2. **Experimental Designer**
+#### 5. **Experimental Designer**
 **Role**: Research Methodology Specialist
 **Expertise**: Hypothesis formulation, experimental design, statistical power analysis
 
@@ -379,7 +551,7 @@ npm run build
 
 ```bash
 # 5. Restart Claude Desktop
-# Your 14 agents are now available!
+# Your 17 agents are now available! (14 original + 3 IP protection tools)
 ```
 
 ---
@@ -787,6 +959,9 @@ H1: Chain-of-thought produces higher accuracy
 │                   (index.ts)                        │
 ├─────────────────────────────────────────────────────┤
 │  Tool Router                                        │
+│   ├─ ip_analytics (NEW)                            │
+│   ├─ compliance_check (NEW)                        │
+│   ├─ archival_system (NEW)                         │
 │   ├─ llm-rubric-architect                          │
 │   ├─ experimental-designer                         │
 │   ├─ budget-agent                                  │
@@ -1500,7 +1675,7 @@ curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
   -d '{"method": "health"}'
 
-# Should return: {"status": "ok", "agents": 14}
+# Should return: {"status": "ok", "agents": 17}
 ```
 
 ---
@@ -1544,6 +1719,8 @@ MIT License - see LICENSE file for details
 ## 📧 Support
 
 - **Documentation**: You're reading it!
+- **Enterprise IP Protection Guide**: See `README_ENTERPRISE_IP.md` for watermarking, monitoring, and compliance details
+- **Corrected Claims**: See `CORRECTED_DOCUMENTATION.md` for accurate technical claims (Jan 2026)
 - **Issues**: [GitHub Issues](https://github.com/Tuesdaythe13th/NerdCabalMCP/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/Tuesdaythe13th/NerdCabalMCP/discussions)
 
