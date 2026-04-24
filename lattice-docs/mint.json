@@ -1,0 +1,178 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "LATTICE",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#FF6B6B",
+    "light": "#4ECDC4",
+    "dark": "#2C3E50",
+    "anchors": {
+      "from": "#FF6B6B",
+      "to": "#4ECDC4"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@lattice.ai"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://dashboard.lattice.ai"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    },
+    {
+      "name": "MCP Integration",
+      "url": "mcp"
+    },
+    {
+      "name": "SDKs",
+      "url": "sdks"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Documentation",
+      "icon": "book-open-cover",
+      "url": "https://docs.lattice.ai"
+    },
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://discord.gg/lattice"
+    },
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/Tuesdaythe13th/lattice"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "concepts",
+        "authentication"
+      ]
+    },
+    {
+      "group": "Core Features",
+      "pages": [
+        "features/specimen-ingestion",
+        "features/threat-detection",
+        "features/interpretability-marketplace",
+        "features/real-time-alerts",
+        "features/leaderboards"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/ingesting-specimens",
+        "guides/detecting-sycophancy",
+        "guides/detecting-prompt-infiltration",
+        "guides/running-interpretability-tools",
+        "guides/setting-up-alerts",
+        "guides/analyzing-incidents",
+        "guides/enterprise-deployment"
+      ]
+    },
+    {
+      "group": "Redis MCP Integration",
+      "pages": [
+        "mcp/overview",
+        "mcp/setup-claude-desktop",
+        "mcp/natural-language-queries",
+        "mcp/use-cases/leaderboards",
+        "mcp/use-cases/messaging",
+        "mcp/use-cases/fast-data-ingest",
+        "mcp/use-cases/caching",
+        "mcp/use-cases/auth-tokens",
+        "mcp/use-cases/deduplication"
+      ]
+    },
+    {
+      "group": "API Documentation",
+      "pages": [
+        "api-reference/overview",
+        "api-reference/authentication",
+        "api-reference/errors",
+        "api-reference/rate-limits"
+      ]
+    },
+    {
+      "group": "Specimens",
+      "pages": [
+        "api-reference/specimens/ingest",
+        "api-reference/specimens/retrieve",
+        "api-reference/specimens/list",
+        "api-reference/specimens/delete"
+      ]
+    },
+    {
+      "group": "Incidents",
+      "pages": [
+        "api-reference/incidents/create",
+        "api-reference/incidents/retrieve",
+        "api-reference/incidents/list",
+        "api-reference/incidents/update"
+      ]
+    },
+    {
+      "group": "Interpretability Tools",
+      "pages": [
+        "api-reference/tools/run-inspect",
+        "api-reference/tools/run-docent",
+        "api-reference/tools/run-neuronpedia",
+        "api-reference/tools/get-results"
+      ]
+    },
+    {
+      "group": "SDKs",
+      "pages": [
+        "sdks/python",
+        "sdks/typescript",
+        "sdks/examples"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/claude-desktop",
+        "integrations/slack",
+        "integrations/discord",
+        "integrations/pagerduty"
+      ]
+    },
+    {
+      "group": "Resources",
+      "pages": [
+        "resources/glossary",
+        "resources/faq",
+        "resources/changelog",
+        "resources/roadmap"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/Tuesdaythe13th/lattice",
+    "twitter": "https://twitter.com/latticeai",
+    "linkedin": "https://www.linkedin.com/company/lattice-ai"
+  },
+  "analytics": {
+    "posthog": {
+      "apiKey": "phc_..."
+    }
+  }
+}

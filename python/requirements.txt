@@ -1,0 +1,11 @@
+# Core dependencies
+numpy>=1.24.0
+torch>=2.0.0
+Pillow>=10.0.0
+
+# Optional: For full watermarking support
+# pywavelets>=1.4.0  # DWT-DCT method
+# transformers>=4.30.0  # Stable Signature models
+
+# MCP integration (if using Python MCP server)
+# fastmcp>=0.2.0

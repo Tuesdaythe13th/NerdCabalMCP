@@ -19,9 +19,10 @@ import {
   getPipelineStatus,
   listAgents,
   getAgentInfo,
+  validateProjectDir,
+  validateGitHubUrl,
   PAPER2AGENT_ROOT,
 } from './utils.js';
-import type { Paper2AgentConfig } from './types.js';
 import { generateRubricArtifacts } from './rubric-architect.js';
 import type { RubricGenerationRequest } from './rubric-types.js';
 import { createExperimentalDesignerPrompts, generateExperimentalDesignReport } from './experimental-designer.js';
@@ -51,6 +52,18 @@ import { generateVisualInspectorOutput, VISUAL_INSPECTOR_AGENT_CARD } from './vi
 import type { VisualInspectorRequest } from './visual-inspector-types.js';
 import { generateForensicAnalysis, FORENSIC_ANALYST_AGENT_CARD } from './forensic-analyst.js';
 import type { ForensicAnalystRequest } from './forensic-analyst-types.js';
+import {
+  generateIPAnalytics,
+  generateComplianceCheck,
+  generateArchivalEntry,
+  IP_PROTECTION_SUITE_CARD,
+  IP_ANALYTICS_TOOL_SCHEMA,
+  COMPLIANCE_ENGINE_TOOL_SCHEMA,
+  ARCHIVAL_SYSTEM_TOOL_SCHEMA
+} from './ip-protection-suite.js';
+import type { IPAnalyticsArgs } from './ip-analytics.js';
+import type { ComplianceCheck } from './compliance-engine.js';
+import type { ArchiveArgs } from './archival-system.js';
 
 const server = new Server(
   {
@@ -893,6 +906,9 @@ const tools: Tool[] = [
       required: ['transcript'],
     },
   },
+  IP_ANALYTICS_TOOL_SCHEMA,
+  COMPLIANCE_ENGINE_TOOL_SCHEMA,
+  ARCHIVAL_SYSTEM_TOOL_SCHEMA,
 ];
 
 /**
@@ -914,24 +930,34 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const config = args as unknown as Paper2AgentConfig;
+        const rawArgs = args as Record<string, unknown>;
+
+        // Validate inputs — throws on invalid values
+        const projectDir = validateProjectDir(rawArgs.project_dir);
+        const githubUrl = validateGitHubUrl(rawArgs.github_url);
+        // Limit tutorials string length to prevent oversized arguments
+        const tutorials = rawArgs.tutorials
+          ? String(rawArgs.tutorials).slice(0, 512)
+          : undefined;
+
         const scriptArgs = [
           'Paper2Agent.sh',
-          '--project_dir',
-          config.projectDir,
-          '--github_url',
-          config.githubUrl,
+          '--project_dir', projectDir,
+          '--github_url', githubUrl,
         ];
 
-        if (config.tutorials) {
-          scriptArgs.push('--tutorials', config.tutorials);
+        if (tutorials) {
+          scriptArgs.push('--tutorials', tutorials);
         }
 
-        if (config.apiKey) {
-          scriptArgs.push('--api', config.apiKey);
-        }
+        // Pass API key via environment variable — never as a CLI argument
+        // (CLI arguments are visible in process listings via ps/top)
+        const apiKey = rawArgs.api_key ? String(rawArgs.api_key) : undefined;
+        const env: NodeJS.ProcessEnv = apiKey
+          ? { ...process.env, ANTHROPIC_API_KEY: apiKey }
+          : { ...process.env };
 
-        const result = await executeCommand('bash', scriptArgs, PAPER2AGENT_ROOT);
+        const result = await executeCommand('bash', scriptArgs, PAPER2AGENT_ROOT, env);
 
         return {
           content: [
@@ -941,9 +967,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 {
                   success: result.success,
                   message: result.success
-                    ? `Successfully initiated Paper2Agent creation for ${config.projectDir}`
+                    ? `Successfully initiated Paper2Agent creation for ${projectDir}`
                     : `Failed to create Paper2Agent: ${result.stderr}`,
-                  projectDir: config.projectDir,
+                  projectDir: projectDir,
                   output: result.stdout,
                   error: result.stderr,
                 },
@@ -959,7 +985,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const { project_dir } = args as unknown as { project_dir: string };
+        const project_dir = validateProjectDir((args as Record<string, unknown>).project_dir);
         const status = await getPipelineStatus(project_dir);
 
         return {
@@ -996,7 +1022,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const { project_dir } = args as unknown as { project_dir: string };
+        const project_dir = validateProjectDir((args as Record<string, unknown>).project_dir);
         const info = await getAgentInfo(project_dir);
 
         if (!info) {
@@ -1031,7 +1057,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!args || typeof args !== 'object') {
           throw new Error('Invalid arguments');
         }
-        const { project_dir } = args as unknown as { project_dir: string };
+        const project_dir = validateProjectDir((args as Record<string, unknown>).project_dir);
         const info = await getAgentInfo(project_dir);
 
         if (!info) {
@@ -1605,6 +1631,57 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 null,
                 2
               ),
+            },
+          ],
+        };
+      }
+
+      case 'ip_analytics': {
+        if (!args || typeof args !== 'object') {
+          throw new Error('Invalid arguments');
+        }
+        const analyticsArgs = args as unknown as IPAnalyticsArgs;
+        const output = generateIPAnalytics(analyticsArgs);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(output, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'compliance_check': {
+        if (!args || typeof args !== 'object') {
+          throw new Error('Invalid arguments');
+        }
+        const complianceArgs = args as unknown as ComplianceCheck;
+        const output = generateComplianceCheck(complianceArgs);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(output, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'archival_system': {
+        if (!args || typeof args !== 'object') {
+          throw new Error('Invalid arguments');
+        }
+        const archiveArgs = args as unknown as ArchiveArgs;
+        const output = generateArchivalEntry(archiveArgs);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(output, null, 2),
             },
           ],
         };
