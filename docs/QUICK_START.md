@@ -1,8 +1,8 @@
-# ARTIFEX NERD SWARM - Quick Start Guide
+# NerdCabalMCP - Quick Start Guide
 
 ## 🎯 Overview
 
-The ARTIFEX NERD SWARM is a Model Context Protocol (MCP) server providing 11 specialized AI agents for research operations. This guide shows you how to install, run, and use the system.
+NerdCabalMCP is a Model Context Protocol (MCP) server providing 20+ specialized AI agents for research, security, design, governance, and more. This guide shows you how to install, run, and use the system.
 
 ---
 
@@ -24,25 +24,23 @@ The ARTIFEX NERD SWARM is a Model Context Protocol (MCP) server providing 11 spe
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/Tuesdaythe13th/Paper2Agent.git
-cd Paper2Agent/mcp-server
+git clone https://github.com/Tuesdaythe13th/NerdCabalMCP.git
+cd NerdCabalMCP
 ```
 
-### Step 2: Install Dependencies
+### Step 2: Run Setup (installs deps, builds, and prints config)
 
 ```bash
+bash setup.sh
+```
+
+Or do it manually:
+
+```bash
+cd mcp-server
 npm install
-```
-
-This installs the MCP SDK and TypeScript dependencies.
-
-### Step 3: Build the Project
-
-```bash
 npm run build
 ```
-
-This compiles TypeScript to JavaScript in the `dist/` directory.
 
 ---
 
@@ -74,25 +72,23 @@ Add the ARTIFEX NERD SWARM server to your MCP servers:
 ```json
 {
   "mcpServers": {
-    "artifex-nerd-swarm": {
+    "nerdcabal": {
       "command": "node",
-      "args": ["/absolute/path/to/Paper2Agent/mcp-server/dist/index.js"],
-      "env": {}
+      "args": ["/absolute/path/to/NerdCabalMCP/mcp-server/dist/index.js"]
     }
   }
 }
 ```
 
-**Important:** Replace `/absolute/path/to/Paper2Agent` with your actual path!
+**Important:** Replace `/absolute/path/to/NerdCabalMCP` with your actual path. `setup.sh` prints the exact snippet for you.
 
 **Example (macOS/Linux):**
 ```json
 {
   "mcpServers": {
-    "artifex-nerd-swarm": {
+    "nerdcabal": {
       "command": "node",
-      "args": ["/home/user/Paper2Agent/mcp-server/dist/index.js"],
-      "env": {}
+      "args": ["/home/user/NerdCabalMCP/mcp-server/dist/index.js"]
     }
   }
 }
@@ -102,10 +98,9 @@ Add the ARTIFEX NERD SWARM server to your MCP servers:
 ```json
 {
   "mcpServers": {
-    "artifex-nerd-swarm": {
+    "nerdcabal": {
       "command": "node",
-      "args": ["C:\\Users\\YourName\\Paper2Agent\\mcp-server\\dist\\index.js"],
-      "env": {}
+      "args": ["C:\\Users\\YourName\\NerdCabalMCP\\mcp-server\\dist\\index.js"]
     }
   }
 }
@@ -117,7 +112,7 @@ Quit and reopen Claude Desktop. The MCP server will start automatically.
 
 #### 4. Verify Connection
 
-In Claude Desktop, you should see a 🔌 icon or MCP indicator showing "artifex-nerd-swarm" is connected.
+In Claude Desktop, you should see a 🔌 icon or MCP indicator showing "nerdcabal" is connected.
 
 ---
 
@@ -126,7 +121,7 @@ In Claude Desktop, you should see a 🔌 icon or MCP indicator showing "artifex-
 You can run the server directly from the command line:
 
 ```bash
-cd /path/to/Paper2Agent/mcp-server
+cd /path/to/NerdCabalMCP/mcp-server
 node dist/index.js
 ```
 
@@ -135,6 +130,7 @@ The server runs on **stdio** (standard input/output), waiting for JSON-RPC 2.0 m
 To test manually, you can send JSON-RPC requests:
 
 ```bash
+# From the mcp-server/ directory:
 echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node dist/index.js
 ```
 
@@ -394,7 +390,7 @@ The server follows the **MCP specification**, so it works with any MCP client:
 ```bash
 npm install -g @modelcontextprotocol/inspector
 
-mcp-inspector node /path/to/Paper2Agent/mcp-server/dist/index.js
+mcp-inspector node /path/to/NerdCabalMCP/mcp-server/dist/index.js
 ```
 
 This opens a web UI to test tools interactively.
@@ -443,12 +439,11 @@ This opens a web UI to test tools interactively.
 ## 🎯 Quick Start Checklist
 
 - [ ] Install Node.js ≥18
-- [ ] Clone repository
-- [ ] `npm install` in `mcp-server/`
-- [ ] `npm run build`
-- [ ] Edit Claude Desktop config with absolute path
+- [ ] Clone repository: `git clone https://github.com/Tuesdaythe13th/NerdCabalMCP.git`
+- [ ] Run `bash setup.sh` (installs, builds, prints config)
+- [ ] Edit Claude Desktop config with the printed absolute path
 - [ ] Restart Claude Desktop
-- [ ] Verify MCP connection (🔌 icon)
+- [ ] Verify MCP connection (🔌 icon showing "nerdcabal")
 - [ ] Test with: "Use generate_rubric to create an evaluation rubric"
 - [ ] Open generated notebook in Google Colab
 
@@ -456,7 +451,7 @@ This opens a web UI to test tools interactively.
 
 ## 📞 Support
 
-**Issues:** https://github.com/Tuesdaythe13th/Paper2Agent/issues
+**Issues:** https://github.com/Tuesdaythe13th/NerdCabalMCP/issues
 
 **MCP Documentation:** https://modelcontextprotocol.io
 
@@ -464,4 +459,4 @@ This opens a web UI to test tools interactively.
 
 ---
 
-**Happy researching with ARTIFEX NERD SWARM! 🚀**
+**Happy researching with NerdCabalMCP! 🚀**
